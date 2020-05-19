@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 require dirname(__DIR__).'/config/bootstrap.php';
 
 //for deployment system 3
-require 'system/config/bootstrap.php';
+//require 'system/config/bootstrap.php';
 
 // The check is to ensure we don't use .env in production
 if (!isset($_SERVER['APP_ENV'])) {
