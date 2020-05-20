@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -44,7 +46,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $lastName;
+    private $lastname;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -52,7 +54,12 @@ class User implements UserInterface
     private $cosplayName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="string", length=100)
      */
     private $regkey;
 
@@ -70,6 +77,40 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $deletedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user")
+     */
+    private $downloadLogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user")
+     */
+    private $likes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
+     */
+    private $sendMessages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
+     */
+    private $receiverMessages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
+     */
+    private $albums;
+
+    public function __construct()
+    {
+        $this->downloadLogs = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->sendMessages = new ArrayCollection();
+        $this->receiverMessages = new ArrayCollection();
+        $this->albums = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -161,14 +202,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastname(): ?string
     {
-        return $this->lastName;
+        return $this->lastname;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastname(string $lastname): self
     {
-        $this->lastName = $lastName;
+        $this->lastname = $lastname;
 
         return $this;
     }
@@ -181,6 +222,18 @@ class User implements UserInterface
     public function setCosplayName(?string $cosplayName): self
     {
         $this->cosplayName = $cosplayName;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
@@ -229,6 +282,161 @@ class User implements UserInterface
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DownloadLog[]
+     */
+    public function getDownloadLogs(): Collection
+    {
+        return $this->downloadLogs;
+    }
+
+    public function addDownloadLog(DownloadLog $downloadLog): self
+    {
+        if (!$this->downloadLogs->contains($downloadLog)) {
+            $this->downloadLogs[] = $downloadLog;
+            $downloadLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDownloadLog(DownloadLog $downloadLog): self
+    {
+        if ($this->downloadLogs->contains($downloadLog)) {
+            $this->downloadLogs->removeElement($downloadLog);
+            // set the owning side to null (unless already changed)
+            if ($downloadLog->getUser() === $this) {
+                $downloadLog->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Like[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): self
+    {
+        if ($this->likes->contains($like)) {
+            $this->likes->removeElement($like);
+            // set the owning side to null (unless already changed)
+            if ($like->getUser() === $this) {
+                $like->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getSendMessages(): Collection
+    {
+        return $this->sendMessages;
+    }
+
+    public function addSendMessage(Message $sendMessage): self
+    {
+        if (!$this->sendMessages->contains($sendMessage)) {
+            $this->sendMessages[] = $sendMessage;
+            $sendMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSendMessage(Message $sendMessage): self
+    {
+        if ($this->sendMessages->contains($sendMessage)) {
+            $this->sendMessages->removeElement($sendMessage);
+            // set the owning side to null (unless already changed)
+            if ($sendMessage->getSender() === $this) {
+                $sendMessage->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getReceiverMessages(): Collection
+    {
+        return $this->receiverMessages;
+    }
+
+    public function addReceiverMessage(Message $receiverMessage): self
+    {
+        if (!$this->receiverMessages->contains($receiverMessage)) {
+            $this->receiverMessages[] = $receiverMessage;
+            $receiverMessage->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiverMessage(Message $receiverMessage): self
+    {
+        if ($this->receiverMessages->contains($receiverMessage)) {
+            $this->receiverMessages->removeElement($receiverMessage);
+            // set the owning side to null (unless already changed)
+            if ($receiverMessage->getReceiver() === $this) {
+                $receiverMessage->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Album[]
+     */
+    public function getAlbums(): Collection
+    {
+        return $this->albums;
+    }
+
+    public function addAlbum(Album $album): self
+    {
+        if (!$this->albums->contains($album)) {
+            $this->albums[] = $album;
+            $album->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAlbum(Album $album): self
+    {
+        if ($this->albums->contains($album)) {
+            $this->albums->removeElement($album);
+            // set the owning side to null (unless already changed)
+            if ($album->getUser() === $this) {
+                $album->setUser(null);
+            }
+        }
 
         return $this;
     }

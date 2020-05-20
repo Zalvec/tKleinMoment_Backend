@@ -25,9 +25,9 @@ class Menu
     private $name;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer")
      */
-    private $order;
+    private $ordering;
 
     public function getId(): ?int
     {
@@ -46,14 +46,14 @@ class Menu
         return $this;
     }
 
-    public function getOrder(): ?int
+    public function getOrdering(): ?int
     {
-        return $this->order;
+        return $this->ordering;
     }
 
-    public function setOrder(int $order): self
+    public function setOrdering(int $ordering): self
     {
-        $this->order = $order;
+        $this->ordering = $ordering;
 
         return $this;
     }

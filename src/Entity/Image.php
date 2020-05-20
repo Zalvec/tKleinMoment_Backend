@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,14 +22,14 @@ class Image
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $name;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $path;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -35,7 +37,7 @@ class Image
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $alt;
 
@@ -59,21 +61,31 @@ class Image
      */
     private $deletedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="image")
+     */
+    private $downloadLogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="image")
+     */
+    private $likes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AlbumImage::class, mappedBy="image")
+     */
+    private $albumImages;
+
+    public function __construct()
+    {
+        $this->downloadLogs = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->albumImages = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getPath(): ?string
@@ -84,6 +96,18 @@ class Image
     public function setPath(string $path): self
     {
         $this->path = $path;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -105,7 +129,7 @@ class Image
         return $this->alt;
     }
 
-    public function setAlt(?string $alt): self
+    public function setAlt(string $alt): self
     {
         $this->alt = $alt;
 
@@ -156,6 +180,99 @@ class Image
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DownloadLog[]
+     */
+    public function getDownloadLogs(): Collection
+    {
+        return $this->downloadLogs;
+    }
+
+    public function addDownloadLog(DownloadLog $downloadLog): self
+    {
+        if (!$this->downloadLogs->contains($downloadLog)) {
+            $this->downloadLogs[] = $downloadLog;
+            $downloadLog->setImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDownloadLog(DownloadLog $downloadLog): self
+    {
+        if ($this->downloadLogs->contains($downloadLog)) {
+            $this->downloadLogs->removeElement($downloadLog);
+            // set the owning side to null (unless already changed)
+            if ($downloadLog->getImage() === $this) {
+                $downloadLog->setImage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Like[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): self
+    {
+        if ($this->likes->contains($like)) {
+            $this->likes->removeElement($like);
+            // set the owning side to null (unless already changed)
+            if ($like->getImage() === $this) {
+                $like->setImage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AlbumImage[]
+     */
+    public function getAlbumImages(): Collection
+    {
+        return $this->albumImages;
+    }
+
+    public function addAlbumImage(AlbumImage $albumImage): self
+    {
+        if (!$this->albumImages->contains($albumImage)) {
+            $this->albumImages[] = $albumImage;
+            $albumImage->setImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAlbumImage(AlbumImage $albumImage): self
+    {
+        if ($this->albumImages->contains($albumImage)) {
+            $this->albumImages->removeElement($albumImage);
+            // set the owning side to null (unless already changed)
+            if ($albumImage->getImage() === $this) {
+                $albumImage->setImage(null);
+            }
+        }
 
         return $this;
     }

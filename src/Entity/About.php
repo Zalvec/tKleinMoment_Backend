@@ -30,11 +30,6 @@ class About
     private $header;
 
     /**
-     * @ORM\Column(type="text")
-     */
-    private $text;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $imagePath;
@@ -43,6 +38,11 @@ class About
      * @ORM\Column(type="string", length=100)
      */
     private $imageName;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $text;
 
     public function getId(): ?int
     {
@@ -73,18 +73,6 @@ class About
         return $this;
     }
 
-    public function getText(): ?string
-    {
-        return $this->text;
-    }
-
-    public function setText(string $text): self
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -105,6 +93,18 @@ class About
     public function setImageName(string $imageName): self
     {
         $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(string $text): self
+    {
+        $this->text = $text;
 
         return $this;
     }
