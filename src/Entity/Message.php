@@ -5,9 +5,23 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+//"security" = "is_granted('ROLE_ADMIN')",
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get",
+ *          "post" = {
+ *              "security" = "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
+ *              { "denormalizationContext" = { "groups" = { "message:write" } } }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get",
+ *          "delete"
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=MessageRepository::class)
  */
 class Message
@@ -21,11 +35,13 @@ class Message
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({ "message:write" })
      */
     private $text;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({ "message:write" })
      */
     private $phoneNumber;
 
@@ -35,16 +51,20 @@ class Message
     private $sentAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="sendMessages")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sendMessages")
      * @ORM\JoinColumn(nullable=false)
      */
     private $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="receiverMessages")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receiverMessages")
      * @ORM\JoinColumn(nullable=false)
      */
     private $receiver;
+
+    public function __construct(){
+        $this->sentAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -78,13 +98,6 @@ class Message
     public function getSentAt(): ?\DateTimeInterface
     {
         return $this->sentAt;
-    }
-
-    public function setSentAt(\DateTimeInterface $sentAt): self
-    {
-        $this->sentAt = $sentAt;
-
-        return $this;
     }
 
     public function getSender(): ?user

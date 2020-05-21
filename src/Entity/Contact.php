@@ -5,9 +5,25 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "contact:get" } } },
+ *          "post" = {
+ *              "security" = "is_granted('ROLE_ADMIN')" ,
+ *              "denormalization_context" = { "groups" = { "admin:contact:write" } }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "contact:get" } } },
+ *          "put" = {
+ *              "security" = "is_granted('ROLE_ADMIN')" ,
+ *              "denormalization_context" = { "groups" = { "admin:contact:write" } }
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
 class Contact
@@ -21,26 +37,31 @@ class Contact
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({ "contact:get", "admin:contact:write"})
      */
     private $facebookLink;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({ "contact:get", "admin:contact:write"})
      */
     private $instagramLink;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({ "contact:get", "admin:contact:write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({ "contact:get", "admin:contact:write"})
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({ "contact:get", "admin:contact:write"})
      */
     private $email;
 

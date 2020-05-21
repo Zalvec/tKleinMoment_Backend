@@ -5,9 +5,20 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+//security="is_granted('ROLE_USER')",
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "like:get" } } },
+ *          "post" = { "denormalization_context" = { "groups" = { "like:write" } } }
+ *     },
+ *     itemOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "like:get" } } },
+ *          "delete" = { "denormalization_context" = { "groups" = { "like:write" } } }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=LikeRepository::class)
  * @ORM\Table(name="`like`")
  */
@@ -26,16 +37,22 @@ class Like
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=image::class, inversedBy="likes")
+     * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({ "like:get", "like:write"})
      */
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="likes")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({ "like:get", "like:write"})
      */
     private $user;
+
+    public function __construct(){
+        $this->date = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -45,13 +62,6 @@ class Like
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
     }
 
     public function getImage(): ?image

@@ -5,9 +5,24 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\DownloadLogRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+//security="is_granted('ROLE_USER')",
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get" = {
+ *              "normalization_context" = { "groups" = { "admin:download:get" } },
+ *              "security" = "is_granted('ROLE_ADMIN')"
+ *          },
+ *          "post" = { "denormalization_context" = { "groups" = { "download:write" } } }
+ *     },
+ *     itemOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "admin:download:get" } },
+ *          "security" = "is_granted('ROLE_ADMIN')"
+ *          },
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=DownloadLogRepository::class)
  */
 class DownloadLog
@@ -21,20 +36,27 @@ class DownloadLog
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({ "admin:download:get" })
      */
     private $downloadedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=image::class, inversedBy="downloadLogs")
+     * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="downloadLogs")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({ "admin:download:get", "download:write" })
      */
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="downloadLogs")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="downloadLogs")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({ "admin:download:get", "download:write" })
      */
     private $user;
+
+    public function __construct(){
+        $this->downloadedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -44,13 +66,6 @@ class DownloadLog
     public function getDownloadedAt(): ?\DateTimeInterface
     {
         return $this->downloadedAt;
-    }
-
-    public function setDownloadedAt(\DateTimeInterface $downloadedAt): self
-    {
-        $this->downloadedAt = $downloadedAt;
-
-        return $this;
     }
 
     public function getImage(): ?image

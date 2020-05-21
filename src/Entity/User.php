@@ -7,11 +7,32 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
+//security="is_granted('ROLE_USER')",
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get",
+ *          "post" = {
+ *              "security" = "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get",
+ *          "put" = { "security" = "is_granted('ROLE_USER') and object == user" },
+ *          "delete" = { "security" = "is_granted('ROLE_ADMIN')" }
+ *     },
+ *     normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}},
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"})
+ * @ORM\Table(name="user")
  */
 class User implements UserInterface
 {
@@ -19,11 +40,15 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user:read", "user:write"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
@@ -40,36 +65,43 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"user:read", "user:write"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"user:read", "user:write"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"user:read", "user:write"})
      */
     private $cosplayName;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @SerializedName("password")
+     * @Groups({"user:write"})
      */
     private $plainPassword;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $regkey;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"user:read"})
      */
     private $updatedAt;
 
@@ -80,11 +112,13 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user")
+     * @Groups({"user:read","user:write"})
      */
     private $downloadLogs;
 
     /**
      * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user")
+     * @Groups({"user:read","user:write"})
      */
     private $likes;
 
@@ -100,6 +134,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
+     * @Groups({"admin:read"})
      */
     private $albums;
 
@@ -110,6 +145,8 @@ class User implements UserInterface
         $this->sendMessages = new ArrayCollection();
         $this->receiverMessages = new ArrayCollection();
         $this->albums = new ArrayCollection();
+        $this->roles[] = 'ROLE_USER';
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -253,13 +290,6 @@ class User implements UserInterface
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface

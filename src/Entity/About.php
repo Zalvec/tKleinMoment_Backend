@@ -5,9 +5,25 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AboutRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "about:get" } } },
+ *          "post" = {
+ *              "security" = "is_granted('ROLE_ADMIN')" ,
+ *              "denormalization_context" = { "groups" = { "admin:about:write" } }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "about:get" } } },
+ *          "put" = {
+ *              "security" = "is_granted('ROLE_ADMIN')" ,
+ *              "denormalization_context" = { "groups" = { "admin:about:write" } }
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=AboutRepository::class)
  */
 class About
@@ -21,26 +37,31 @@ class About
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"about:get", "admin:about:write"})
      */
     private $tableName;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"about:get", "admin:about:write"})
      */
     private $header;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"about:get", "admin:about:write"})
      */
     private $imagePath;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"about:get", "admin:about:write"})
      */
     private $imageName;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"about:get", "admin:about:write"})
      */
     private $text;
 

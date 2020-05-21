@@ -7,9 +7,29 @@ use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "album:read" } } },
+ *          "post" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalization_context" = { "groups" = { "admin:album:write" } } }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "album:read" } } },
+ *          "put" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalization_context" = { "groups" = { "admin:album:write" } } }
+ *          },
+ *          "delete" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalization_context" = { "groups" = { "admin:album:write" } } }
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=AlbumRepository::class)
  */
 class Album
@@ -23,26 +43,31 @@ class Album
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({ "album:read", "admin:album:write" })
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({ "album:read", "admin:album:write" })
      */
     private $location;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({ "album:read", "admin:album:write" })
      */
     private $event;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({ "album:read", "admin:album:write" })
      */
     private $date;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({ "album:read", "admin:album:write" })
      */
     private $description;
 
@@ -62,7 +87,7 @@ class Album
     private $deletedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="albums")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="albums")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -81,6 +106,7 @@ class Album
     {
         $this->albumImages = new ArrayCollection();
         $this->albumTags = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -151,13 +177,6 @@ class Album
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface

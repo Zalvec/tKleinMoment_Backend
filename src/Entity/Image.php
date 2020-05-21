@@ -7,9 +7,29 @@ use App\Repository\ImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"  = { "normalization_context" = { "groups" = { "image:read" } } },
+ *          "post" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalizationContext" = { "groups" = { "admin:image:write" } } }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"  = { "normalization_context" = { "groups" = { "image:read" } } },
+ *          "put" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalizationContext" = { "groups" ={ "admin:image:write" } } }
+ *          },
+ *          "delete" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalizationContext" = { "groups" ={ "admin:image:write" } } }
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=ImageRepository::class)
  */
 class Image
@@ -23,26 +43,31 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({ "admin:image:write", "image:read" })
      */
     private $path;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({ "admin:image:write", "image:read" })
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({ "admin:image:write", "image:read" })
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({ "admin:image:write", "image:read" })
      */
     private $alt;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({ "admin:image:write" })
      */
     private $size;
 
@@ -73,6 +98,7 @@ class Image
 
     /**
      * @ORM\OneToMany(targetEntity=AlbumImage::class, mappedBy="image")
+     * @Groups({ "admin:image:write", "image:read" })
      */
     private $albumImages;
 
@@ -81,6 +107,7 @@ class Image
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->albumImages = new ArrayCollection();
+        $this->uploadedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -151,13 +178,6 @@ class Image
     public function getUploadedAt(): ?\DateTimeInterface
     {
         return $this->uploadedAt;
-    }
-
-    public function setUploadedAt(\DateTimeInterface $uploadedAt): self
-    {
-        $this->uploadedAt = $uploadedAt;
-
-        return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface

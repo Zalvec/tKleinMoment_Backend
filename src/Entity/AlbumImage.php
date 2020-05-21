@@ -5,9 +5,25 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AlbumImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "albumimg:read" } } },
+ *          "post" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalizationContext" = { "groups" = { "admin:albumimg:write" } } }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get" = { "normalization_context" = { "groups" = { "albumimg:read" } } },
+ *          "delete" = {
+ *              "security" = "is_granted('ROLE_ADMIN')",
+ *              { "denormalizationContext" = { "groups" ={ "admin:albumimg:write" } } }
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=AlbumImageRepository::class)
  */
 class AlbumImage
@@ -20,14 +36,16 @@ class AlbumImage
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=image::class, inversedBy="albumImages")
+     * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="albumImages")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups( { "albumimg:read", "admin:albumimg:write" } )
      */
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity=album::class, inversedBy="albumImages")
+     * @ORM\ManyToOne(targetEntity=Album::class, inversedBy="albumImages")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups( { "albumimg:read", "admin:albumimg:write" } )
      */
     private $album;
 

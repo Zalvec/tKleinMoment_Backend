@@ -7,7 +7,14 @@ use App\Repository\MenuRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"
+ *     },
+ *     itemOperations={
+ *          "get"
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=MenuRepository::class)
  */
 class Menu
