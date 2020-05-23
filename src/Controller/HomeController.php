@@ -35,7 +35,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/api/account", name="api_account", methods={"GET"})
+     * @Route("/api/users/account", name="api_account", methods={"GET"})
      */
     public function accountInfo(){
         $user = $this->getUser();
