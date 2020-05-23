@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
@@ -13,7 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  *     },
  *     itemOperations={
  *          "get"
- *     }
+ *     },
+ *     normalizationContext={"groups"={"menu:read"}}
  * )
  * @ORM\Entity(repositoryClass=MenuRepository::class)
  */
@@ -28,11 +31,13 @@ class Menu
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"menu:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"menu:read"})
      */
     private $ordering;
 

@@ -10,23 +10,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = { "normalization_context" = { "groups" = { "albumtag:read" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" = { "admin:albumtag:write" } } }
- *          }
+ *          "get",
+ *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *          "get" = { "normalization_context" = { "groups" = { "albumtag:read" } } },
- *          "put" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" = { "admin:albumtag:write" } } }
- *          },
- *          "delete" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" ={ "admin:albumtag:write" } } }
- *          }
- *     }
+ *          "get",
+ *          "put" = {"security" = "is_granted('ROLE_ADMIN')"},
+ *          "delete" = {"security" = "is_granted('ROLE_ADMIN')"}
+ *     },
+ *     normalizationContext={"groups"={"albumtag:read"}},
+ *     denormalizationContext={"groups"={"admin:albumtag:write"}},
  * )
  * @ORM\Entity(repositoryClass=AlbumTagRepository::class)
  */
@@ -49,7 +42,7 @@ class AlbumTag
     /**
      * @ORM\ManyToOne(targetEntity=Tag::class, inversedBy="albumTags")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({ "albumtag:read", "admin:albumtag:write" })
+     * @Groups({ "albumtag:read", "admin:albumtag:write", "album:item:read" })
      */
     private $tag;
 

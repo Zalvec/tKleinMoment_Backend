@@ -11,13 +11,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = { "normalization_context" = { "groups" = { "like:get" } } },
- *          "post" = { "denormalization_context" = { "groups" = { "like:write" } } }
+ *          "get",
+ *          "post"
  *     },
  *     itemOperations={
- *          "get" = { "normalization_context" = { "groups" = { "like:get" } } },
- *          "delete" = { "denormalization_context" = { "groups" = { "like:write" } } }
- *     }
+ *          "get",
+ *          "delete"
+ *     },
+ *     normalizationContext={"groups"={"like:read"}},
+ *     denormalizationContext={"groups"={"like:write"}},
  * )
  * @ORM\Entity(repositoryClass=LikeRepository::class)
  * @ORM\Table(name="`like`")
@@ -33,20 +35,21 @@ class Like
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({ "like:read" })
      */
     private $date;
 
     /**
      * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({ "like:get", "like:write"})
+     * @Groups({ "like:read", "like:write", "user:item:read"})
      */
     private $image;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({ "like:get", "like:write"})
+     * @Groups({ "like:read", "like:write"})
      */
     private $user;
 

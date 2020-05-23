@@ -8,27 +8,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get"  = { "normalization_context" = { "groups" = { "image:read" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" = { "admin:image:write" } } }
- *          }
+ *          "get",
+ *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *          "get"  = { "normalization_context" = { "groups" = { "image:read" } } },
- *          "put" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" ={ "admin:image:write" } } }
- *          },
- *          "delete" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" ={ "admin:image:write" } } }
- *          }
- *     }
+ *          "get",
+ *          "put" = {"security" = "is_granted('ROLE_ADMIN')"},
+ *          "delete" = { "security" = "is_granted('ROLE_ADMIN')"}
+ *     },
+ *     normalizationContext={"groups"={"image:read"}},
+ *     denormalizationContext={"groups"={"admin:image:write"}},
  * )
  * @ORM\Entity(repositoryClass=ImageRepository::class)
  */
@@ -43,25 +37,29 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Assert\NotBlank()
      */
     private $path;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({ "admin:image:write", "image:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=100)
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({ "admin:image:write", "image:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      */
     private $alt;
 

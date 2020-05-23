@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 //"security" = "is_granted('ROLE_ADMIN')",
 /**
@@ -36,12 +37,15 @@ class Message
     /**
      * @ORM\Column(type="text")
      * @Groups({ "message:write" })
+     * @Assert\NotBlank()
      */
     private $text;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=30)
      * @Groups({ "message:write" })
+     * @Assert\NotBlank()
+     * @Assert\Length(max=20)
      */
     private $phoneNumber;
 

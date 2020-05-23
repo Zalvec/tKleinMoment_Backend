@@ -2,35 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = { "normalization_context" = { "groups" = { "album:read" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalization_context" = { "groups" = { "admin:album:write" } } }
- *          }
+ *          "get",
+ *          "post" = { "security" = "is_granted('ROLE_ADMIN')" }
  *     },
  *     itemOperations={
- *          "get" = { "normalization_context" = { "groups" = { "album:read" } } },
- *          "put" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalization_context" = { "groups" = { "admin:album:write" } } }
- *          },
- *          "delete" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalization_context" = { "groups" = { "admin:album:write" } } }
- *          }
- *     }
+ *          "get" = {"normalization_context"={"groups"={"album:item:read"}}},
+ *          "put" = { "security" = "is_granted('ROLE_ADMIN')" },
+ *          "delete" = { "security" = "is_granted('ROLE_ADMIN')" }
+ *     },
+ *     normalizationContext={"groups"={"album:read"}},
+ *     denormalizationContext={"groups"={"admin:album:write"}},
  * )
  * @ORM\Entity(repositoryClass=AlbumRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"name":"partial", "location":"partial", "event":"partial", "date":"exact"})
+ * @ApiFilter(PropertyFilter::class)
  */
 class Album
 {
@@ -43,31 +42,40 @@ class Album
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "album:read", "admin:album:write" })
+     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=255)
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "album:read", "admin:album:write" })
+     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=255)
      */
     private $location;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "album:read", "admin:album:write" })
+     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=255)
      */
     private $event;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({ "album:read", "admin:album:write" })
+     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Assert\NotBlank()
      */
     private $date;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "album:read", "admin:album:write" })
+     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
     private $description;
 
@@ -89,16 +97,19 @@ class Album
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="albums")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({ "admin:album:write" })
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity=AlbumImage::class, mappedBy="album")
+     * @Groups({ "album:item:read", "admin:album:write" })
      */
     private $albumImages;
 
     /**
      * @ORM\OneToMany(targetEntity=AlbumTag::class, mappedBy="album")
+     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
      */
     private $albumTags;
 

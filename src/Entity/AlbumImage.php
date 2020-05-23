@@ -10,19 +10,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = { "normalization_context" = { "groups" = { "albumimg:read" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" = { "admin:albumimg:write" } } }
- *          }
+ *          "get",
+ *          "post" = { "security" = "is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *          "get" = { "normalization_context" = { "groups" = { "albumimg:read" } } },
- *          "delete" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" ={ "admin:albumimg:write" } } }
- *          }
- *     }
+ *          "get",
+ *          "delete" = {"security" = "is_granted('ROLE_ADMIN')"}
+ *     },
+ *     normalizationContext= {"groups" = {"albumimg:read"}},
+ *     denormalizationContext= {"groups"={"admin:albumimg:write"}},
  * )
  * @ORM\Entity(repositoryClass=AlbumImageRepository::class)
  */
@@ -38,7 +34,7 @@ class AlbumImage
     /**
      * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="albumImages")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups( { "albumimg:read", "admin:albumimg:write" } )
+     * @Groups( { "albumimg:read", "admin:albumimg:write", "album:item:read" } )
      */
     private $image;
 

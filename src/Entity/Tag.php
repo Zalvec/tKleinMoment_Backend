@@ -2,35 +2,32 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get"  = { "normalization_context" = { "groups" = { "tag:read" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" = { "admin:tag:write" } } }
- *          }
+ *          "get",
+ *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *          "get"  = { "normalization_context" = { "groups" = { "tag:read" } } },
- *          "put" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" ={ "admin:tag:write" } } }
- *          },
- *          "delete" = {
- *              "security" = "is_granted('ROLE_ADMIN')",
- *              { "denormalizationContext" = { "groups" ={ "admin:tag:write" } } }
- *          }
- *     }
+ *          "get",
+ *          "put" = {"security" = "is_granted('ROLE_ADMIN')"},
+ *          "delete" = {"security" = "is_granted('ROLE_ADMIN')"}
+ *     },
+ *     normalizationContext={"groups"={"tag:read"}},
+ *     denormalizationContext={"groups"={ "admin:tag:write" }},
  * )
  * @ORM\Entity(repositoryClass=TagRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"description":"exact"})
  */
 class Tag
 {
@@ -43,7 +40,9 @@ class Tag
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({ "admin:tag:write", "tag:read" })
+     * @Groups({ "admin:tag:write", "tag:read", "album:item:read" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=50)
      */
     private $description;
 

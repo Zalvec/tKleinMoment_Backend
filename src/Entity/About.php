@@ -6,23 +6,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AboutRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = { "normalization_context" = { "groups" = { "about:get" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')" ,
- *              "denormalization_context" = { "groups" = { "admin:about:write" } }
- *          }
+ *          "get",
+ *          "post" = { "security" = "is_granted('ROLE_ADMIN')" }
  *     },
  *     itemOperations={
- *          "get" = { "normalization_context" = { "groups" = { "about:get" } } },
- *          "put" = {
- *              "security" = "is_granted('ROLE_ADMIN')" ,
- *              "denormalization_context" = { "groups" = { "admin:about:write" } }
- *          }
- *     }
+ *          "get",
+ *          "put" = { "security" = "is_granted('ROLE_ADMIN')" }
+ *     },
+ *     normalizationContext={"groups"={"about:read"}},
+ *     denormalizationContext={"groups"={"admin:about:write"}},
  * )
  * @ORM\Entity(repositoryClass=AboutRepository::class)
  */
@@ -37,31 +34,39 @@ class About
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"about:get", "admin:about:write"})
+     * @Groups({"about:read", "admin:about:write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 100, maxMessage="TableName has to be between 2 and 100 chars")
      */
     private $tableName;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"about:get", "admin:about:write"})
+     * @Groups({"about:read", "admin:about:write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=100, maxMessage="Header has to be between 2 and 100 chars")
      */
     private $header;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"about:get", "admin:about:write"})
+     * @Groups({"about:read", "admin:about:write"})
+     * @Assert\NotBlank()
      */
     private $imagePath;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"about:get", "admin:about:write"})
+     * @Groups({"about:read", "admin:about:write"})
+     * @Assert\NotBlank()
      */
     private $imageName;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"about:get", "admin:about:write"})
+     * @Groups({"about:read", "admin:about:write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
     private $text;
 

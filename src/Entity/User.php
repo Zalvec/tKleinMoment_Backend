@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,27 +14,29 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
-//security="is_granted('ROLE_USER')",
 /**
  * @ApiResource(
  *     collectionOperations={
  *          "get",
- *          "post" = {
- *              "security" = "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"
- *          }
+ *          "post"
  *     },
  *     itemOperations={
- *          "get",
- *          "put" = { "security" = "is_granted('ROLE_USER') and object == user" },
- *          "delete" = { "security" = "is_granted('ROLE_ADMIN')" }
+ *          "get" = {"normalization_context"={"groups"={"user:item:read"}}},
+ *          "put" = {
+ *              "security" = "is_granted('ROLE_USER') and object == user",
+ *              "denormalization_context" = { "groups" = { "user:item:write" }}
+ *           },
+ *          "delete" = { "security" = "is_granted('ROLE_USER') and object == user" }
  *     },
  *     normalizationContext={"groups"={"user:read"}},
  *     denormalizationContext={"groups"={"user:write"}},
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"})
- * @ORM\Table(name="user")
+ * @UniqueEntity(fields={"cosplayName"})
+ * @ApiFilter(PropertyFilter::class)
  */
 class User implements UserInterface
 {
@@ -40,13 +44,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "user:item:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
      * @Assert\NotBlank()
      * @Assert\Email()
      */
@@ -54,6 +58,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user:read","user:item:read"})
      */
     private $roles = [];
 
@@ -65,43 +70,48 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=50)
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=100)
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups({"user:read", "user:write"})
+     * @ORM\Column(type="string", length=100, nullable=true, unique=true)
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
+     * @Assert\Length(min=2, max=100)
      */
     private $cosplayName;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      * @SerializedName("password")
-     * @Groups({"user:write"})
+     * @Groups({"user:write", "user:item:write"})
      */
     private $plainPassword;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"user:write", "user:item:read"})
      */
     private $regkey;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "user:item:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"user:read"})
      */
     private $updatedAt;
 
@@ -118,7 +128,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user")
-     * @Groups({"user:read","user:write"})
+     * @Groups({"user:read","user:write", "user:item:read"})
      */
     private $likes;
 
@@ -134,7 +144,6 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
-     * @Groups({"admin:read"})
      */
     private $albums;
 
@@ -162,7 +171,7 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
+        $this->updatedAt = new \DateTimeImmutable();
         return $this;
     }
 
@@ -173,6 +182,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
+//        if ($this->cosplayName) return (string) $this->cosplayName;
         return (string) $this->email;
     }
 
@@ -206,7 +216,7 @@ class User implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
+        $this->updatedAt = new \DateTimeImmutable();
         return $this;
     }
 
@@ -224,7 +234,7 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getFirstName(): ?string
@@ -259,7 +269,7 @@ class User implements UserInterface
     public function setCosplayName(?string $cosplayName): self
     {
         $this->cosplayName = $cosplayName;
-
+        $this->updatedAt = new \DateTimeImmutable();
         return $this;
     }
 
@@ -283,7 +293,7 @@ class User implements UserInterface
     public function setRegkey(string $regkey): self
     {
         $this->regkey = $regkey;
-
+        $this->updatedAt = new \DateTimeImmutable();
         return $this;
     }
 
@@ -292,9 +302,22 @@ class User implements UserInterface
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    /**
+     * @return string|null
+     * @Groups({"user:item:read"})
+     */
+    public function getCreatedAtAgo(): ?string
     {
-        return $this->updatedAt;
+        return Carbon::instance($this->getCreatedAt())->diffForHumans();
+    }
+
+    public function getUpdatedAt(): ?string
+    {
+        if ($this->updatedAt){
+            $date = $this->updatedAt;
+            return date("d-m-Y", $date);
+        }
+        return "User is not updated yet.";
     }
 
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
@@ -309,11 +332,13 @@ class User implements UserInterface
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): string
     {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
+        if ($this->deletedAt){
+            $date = $this->deletedAt;
+            return date("d-m-Y", $date);
+        }
+        return "User is not deleted.";
     }
 
     /**

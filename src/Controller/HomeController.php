@@ -33,4 +33,21 @@ class HomeController extends AbstractController
     public function logout(){
         return new Response("<h1>logged out</h1>");
     }
+
+    /**
+     * @Route("/api/account", name="api_account", methods={"GET"})
+     */
+    public function accountInfo(){
+        $user = $this->getUser();
+
+        return $this->json(
+            [
+                "id" => $user->getId(),
+                "email" => $user->getEmail(),
+                "name" => $user->getFirstName(),
+                "cosplay" => $user->getCosplayName(),
+                "roles" => $user->getRoles()
+            ],
+            200, []);
+    }
 }

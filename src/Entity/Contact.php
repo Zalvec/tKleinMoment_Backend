@@ -6,23 +6,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = { "normalization_context" = { "groups" = { "contact:get" } } },
- *          "post" = {
- *              "security" = "is_granted('ROLE_ADMIN')" ,
- *              "denormalization_context" = { "groups" = { "admin:contact:write" } }
- *          }
+ *          "get",
+ *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *          "get" = { "normalization_context" = { "groups" = { "contact:get" } } },
- *          "put" = {
- *              "security" = "is_granted('ROLE_ADMIN')" ,
- *              "denormalization_context" = { "groups" = { "admin:contact:write" } }
- *          }
- *     }
+ *          "get",
+ *          "put" = {"security" = "is_granted('ROLE_ADMIN')"}
+ *     },
+ *     normalizationContext={"groups"={"contact:read"}},
+ *     denormalizationContext={"groups"={"admin:contact:write"}},
  * )
  * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
@@ -37,31 +34,36 @@ class Contact
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({ "contact:get", "admin:contact:write"})
+     * @Groups({ "contact:read", "admin:contact:write"})
      */
     private $facebookLink;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({ "contact:get", "admin:contact:write"})
+     * @Groups({ "contact:read", "admin:contact:write"})
      */
     private $instagramLink;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({ "contact:get", "admin:contact:write"})
+     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=100)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @Groups({ "contact:get", "admin:contact:write"})
+     * @ORM\Column(type="string", length=30, nullable=true)
+     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Assert\Length(max=20)
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({ "contact:get", "admin:contact:write"})
+     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
