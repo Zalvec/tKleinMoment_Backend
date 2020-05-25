@@ -26,13 +26,13 @@ class HomeController extends AbstractController
         return new Response("<h1>all menu items</h1>");
     }
 
-    /**
-     * @return Response
-     * @Route("/logout", name="app_logout")
-     */
-    public function logout(){
-        return new Response("<h1>logged out</h1>");
-    }
+//    /**
+//     * @return Response
+//     * @Route("/logout", name="app_logout")
+//     */
+//    public function logout(){
+//        return new Response("<h1>logged out</h1>");
+//    }
 
     /**
      * @Route("/api/users/account", name="api_account", methods={"GET"})

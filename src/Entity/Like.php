@@ -67,6 +67,11 @@ class Like
         return $this->date;
     }
 
+    public function setDate(\DateTimeImmutable $date): void
+    {
+        $this->date = $date;
+    }
+
     public function getImage(): ?image
     {
         return $this->image;
@@ -90,4 +95,10 @@ class Like
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
 }

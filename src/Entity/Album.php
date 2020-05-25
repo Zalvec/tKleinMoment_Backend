@@ -133,6 +133,7 @@ class Album
     public function setName(string $name): self
     {
         $this->name = $name;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -145,6 +146,7 @@ class Album
     public function setLocation(string $location): self
     {
         $this->location = $location;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -157,6 +159,7 @@ class Album
     public function setEvent(string $event): self
     {
         $this->event = $event;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -169,6 +172,7 @@ class Album
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -181,6 +185,7 @@ class Album
     public function setDescription(string $description): self
     {
         $this->description = $description;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -188,6 +193,11 @@ class Album
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -222,6 +232,7 @@ class Album
     public function setUser(?user $user): self
     {
         $this->user = $user;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -287,4 +298,14 @@ class Album
 
         return $this;
     }
+
+    /**
+     * Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+     */
+    public function __toString()
+    {
+        if(!$this->name) return 'No Albums';
+        return (string) $this->name;
+    }
+
 }

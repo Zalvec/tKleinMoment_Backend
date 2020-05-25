@@ -43,14 +43,6 @@ class Image
     private $path;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
-     */
-    private $name;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
@@ -121,18 +113,6 @@ class Image
     public function setPath(string $path): self
     {
         $this->path = $path;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
 
         return $this;
     }
@@ -294,4 +274,10 @@ class Image
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
 }

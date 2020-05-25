@@ -104,6 +104,11 @@ class Message
         return $this->sentAt;
     }
 
+    public function setSentAt(\DateTimeImmutable $sentAt): void
+    {
+        $this->sentAt = $sentAt;
+    }
+
     public function getSender(): ?user
     {
         return $this->sender;
@@ -127,4 +132,10 @@ class Message
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
 }

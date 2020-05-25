@@ -302,6 +302,12 @@ class User implements UserInterface
         return $this->createdAt;
     }
 
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
     /**
      * @return string|null
      * @Groups({"user:item:read"})
@@ -311,13 +317,14 @@ class User implements UserInterface
         return Carbon::instance($this->getCreatedAt())->diffForHumans();
     }
 
-    public function getUpdatedAt(): ?string
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        if ($this->updatedAt){
-            $date = $this->updatedAt;
-            return date("d-m-Y", $date);
-        }
-        return "User is not updated yet.";
+//        if ($this->updatedAt){
+//            $date = $this->updatedAt;
+//            return date("d-m-Y", $date);
+//        }
+//        return "User is not updated yet.";
+        return $this->updatedAt;
     }
 
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
@@ -334,11 +341,13 @@ class User implements UserInterface
 
     public function setDeletedAt(?\DateTimeInterface $deletedAt): string
     {
-        if ($this->deletedAt){
-            $date = $this->deletedAt;
-            return date("d-m-Y", $date);
-        }
-        return "User is not deleted.";
+//        if ($this->deletedAt){
+//            $date = $this->deletedAt;
+//            return date("d-m-Y", $date);
+//        }
+//        return "User is not deleted.";
+        $this->deletedAt = $deletedAt;
+        return $this;
     }
 
     /**
@@ -494,5 +503,13 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function __toString(){
+        return $this->email;
+    }
+
+    public function getName(){
+        return $this->getFirstName() . ' ' . $this->getLastname();
     }
 }

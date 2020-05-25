@@ -1,3 +1,11 @@
-login_check:
-  path:     /api/login
-  methods:  [POST]
+#login_check:
+#  path:     /api/login
+#  methods:  [POST]
+
+app_login:
+  path: /admin/login
+  controller: App\Controller\SecurityController::login
+
+app_logout:
+  path: /admin/logout
+  methods: GET

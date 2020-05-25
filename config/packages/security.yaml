@@ -13,18 +13,35 @@ security:
                 property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
-        login:
-            pattern:  ^/api/login
+        admin:
+            pattern: ^/admin
+            stateless: false
+            anonymous: true
+            form_login:
+                login_path: /admin/login
+                check_path: /admin/login
+                csrf_token_generator: security.csrf.token_manager
+            guard:
+                authenticators:
+                    - App\Security\AdminAuthenticator
+                entry_point: App\Security\AdminAuthenticator
+            logout:
+                path: /admin/logout
+
+        api:
+#            pattern:   ^/api/users/
             stateless: true
             anonymous: true
             json_login:
-                check_path:         /api/login
+                check_path: /api/login
+                username_path: email
+                password_path: password
                 success_handler:    lexik_jwt_authentication.handler.authentication_success
                 failure_handler:    lexik_jwt_authentication.handler.authentication_failure
-
-        api:
-            pattern:   ^/api/users/
-            stateless: true
+#            logout:
+#                path: app_logout
+#                # where to redirect after logout
+#                # target: app_any_route
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
@@ -45,8 +62,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # access restriction for admin dashboard
+        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+        # access restriction for api endpoints
+
+        # To be checked endpoints
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/menu, roles: IS_AUTHENTICATED_ANONYMOUSLY }
