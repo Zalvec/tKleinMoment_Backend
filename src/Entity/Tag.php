@@ -47,8 +47,7 @@ class Tag
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="Tag", cascade={"persist"})
-     * @Groups({ "tag:read", "album:item:read" })
+     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="tags")
      */
     private $albums;
 

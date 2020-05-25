@@ -87,8 +87,7 @@ class Image
     private $likes;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="Image", cascade={"persist"})
-     * @Groups({ "image:read", "album:item:read" })
+     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="images")
      */
     private $albums;
 
@@ -252,7 +251,7 @@ class Image
     /**
      * @return Collection|Album[]
      */
-    public function getAlbum(): Collection
+    public function getAlbums(): Collection
     {
         return $this->albums;
     }

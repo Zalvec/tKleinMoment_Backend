@@ -102,22 +102,20 @@ class Album
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="Album", cascade={"persist"})
-     * @Groups({ "album:item:read" })
-     */
-    private $images;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="Album", cascade={"persist"})
-     * @Groups({ "album:read", "album:item:read" })
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="albums")
      */
     private $tags;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="albums")
+     */
+    private $images;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->images = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -247,32 +245,6 @@ class Album
     }
 
     /**
-     * @return Collection|Image[]
-     */
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    public function addImage(Image $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Image $image): self
-    {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Tag[]
      */
     public function getTags(): Collection
@@ -293,6 +265,32 @@ class Album
     {
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
         }
 
         return $this;

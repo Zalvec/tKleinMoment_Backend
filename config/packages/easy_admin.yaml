@@ -62,7 +62,6 @@ easy_admin:
                     - description
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
-#                    - { property: 'image', label: 'Image', type: 'image' }
                     - tags
             form:
                 fields:
