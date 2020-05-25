@@ -22,6 +22,11 @@ easy_admin:
         name_property_path: 'firstName'
     list:
         title: '%%entity_label%% overview'
+        collapse_actions: true
+        actions:
+            - { name: 'show', icon: 'info-circle', label: 'Show' }
+            - { name: 'edit', icon: 'pencil', label: 'Edit' }
+            - { name: 'delete', icon: 'trash-alt', label: 'Delete' }
     formats:
         date:     'd/m/Y'
         time:     'H:i'
@@ -89,6 +94,7 @@ easy_admin:
         DownloadLog:
             class: App\Entity\DownloadLog
             label: 'DownloadLog'
+            disabled_actions: ['delete', 'new', 'edit']
             list:
                 help: 'Overview of all the downloaded images. When and by who'
                 fields:
@@ -121,6 +127,7 @@ easy_admin:
         Like:
             class: App\Entity\Like
             label: 'Like'
+            disabled_actions: ['delete', 'new', 'edit']
             list:
                 help: 'Overview of all the liked images'
                 fields:
@@ -133,6 +140,7 @@ easy_admin:
         Message:
             class: App\Entity\Message
             label: 'Message'
+            disabled_actions: ['delete', 'new']
             list:
                 help: 'Overview of all messages sent to you by members and non-members'
                 fields:
@@ -158,6 +166,7 @@ easy_admin:
         User:
             class: App\Entity\User
             label: 'User'
+            disabled_actions: ['delete']
             list:
                 help: 'Overview of all the users of your site'
                 fields:
@@ -165,6 +174,7 @@ easy_admin:
                     - name
                     - { property: 'cosplayName', label: 'Cosplay name' }
                     - { property: 'email', type: 'email' }
+                    - roles
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated At', type: 'datetime' }
 
