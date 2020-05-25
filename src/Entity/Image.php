@@ -87,17 +87,17 @@ class Image
     private $likes;
 
     /**
-     * @ORM\OneToMany(targetEntity=AlbumImage::class, mappedBy="image")
-     * @Groups({ "admin:image:write", "image:read" })
+     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="Image", cascade={"persist"})
+     * @Groups({ "image:read", "album:item:read" })
      */
-    private $albumImages;
+    private $albums;
 
     public function __construct()
     {
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->albumImages = new ArrayCollection();
         $this->uploadedAt = new \DateTimeImmutable();
+        $this->albums = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,40 +244,37 @@ class Image
         return $this;
     }
 
-    /**
-     * @return Collection|AlbumImage[]
-     */
-    public function getAlbumImages(): Collection
-    {
-        return $this->albumImages;
-    }
-
-    public function addAlbumImage(AlbumImage $albumImage): self
-    {
-        if (!$this->albumImages->contains($albumImage)) {
-            $this->albumImages[] = $albumImage;
-            $albumImage->setImage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAlbumImage(AlbumImage $albumImage): self
-    {
-        if ($this->albumImages->contains($albumImage)) {
-            $this->albumImages->removeElement($albumImage);
-            // set the owning side to null (unless already changed)
-            if ($albumImage->getImage() === $this) {
-                $albumImage->setImage(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    /**
+     * @return Collection|Album[]
+     */
+    public function getAlbum(): Collection
+    {
+        return $this->albums;
+    }
+
+    public function addAlbum(Album $album): self
+    {
+        if (!$this->albums->contains($album)) {
+            $this->albums[] = $album;
+            $album->addImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAlbum(Album $album): self
+    {
+        if ($this->albums->contains($album)) {
+            $this->albums->removeElement($album);
+            $album->removeImage($this);
+        }
+
+        return $this;
     }
 
 }

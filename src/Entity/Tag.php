@@ -47,14 +47,14 @@ class Tag
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=AlbumTag::class, mappedBy="tag")
-     * @Groups({ "admin:tag:write", "tag:read" })
+     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="Tag", cascade={"persist"})
+     * @Groups({ "tag:read", "album:item:read" })
      */
-    private $albumTags;
+    private $albums;
 
     public function __construct()
     {
-        $this->albumTags = new ArrayCollection();
+        $this->albums = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,40 +74,37 @@ class Tag
         return $this;
     }
 
-    /**
-     * @return Collection|AlbumTag[]
-     */
-    public function getAlbumTags(): Collection
-    {
-        return $this->albumTags;
-    }
-
-    public function addAlbumTag(AlbumTag $albumTag): self
-    {
-        if (!$this->albumTags->contains($albumTag)) {
-            $this->albumTags[] = $albumTag;
-            $albumTag->setTag($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAlbumTag(AlbumTag $albumTag): self
-    {
-        if ($this->albumTags->contains($albumTag)) {
-            $this->albumTags->removeElement($albumTag);
-            // set the owning side to null (unless already changed)
-            if ($albumTag->getTag() === $this) {
-                $albumTag->setTag(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function __toString()
     {
         return (string) $this->description;
+    }
+
+    /**
+     * @return Collection|Album[]
+     */
+    public function getAlbums(): Collection
+    {
+        return $this->albums;
+    }
+
+    public function addAlbum(Album $album): self
+    {
+        if (!$this->albums->contains($album)) {
+            $this->albums[] = $album;
+            $album->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAlbum(Album $album): self
+    {
+        if ($this->albums->contains($album)) {
+            $this->albums->removeElement($album);
+            $album->removeTag($this);
+        }
+
+        return $this;
     }
 
 }

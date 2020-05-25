@@ -102,22 +102,22 @@ class Album
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=AlbumImage::class, mappedBy="album")
-     * @Groups({ "album:item:read", "admin:album:write" })
+     * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="Album", cascade={"persist"})
+     * @Groups({ "album:item:read" })
      */
-    private $albumImages;
+    private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=AlbumTag::class, mappedBy="album")
-     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="Album", cascade={"persist"})
+     * @Groups({ "album:read", "album:item:read" })
      */
-    private $albumTags;
+    private $tags;
 
     public function __construct()
     {
-        $this->albumImages = new ArrayCollection();
-        $this->albumTags = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->images = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -238,74 +238,64 @@ class Album
     }
 
     /**
-     * @return Collection|AlbumImage[]
-     */
-    public function getAlbumImages(): Collection
-    {
-        return $this->albumImages;
-    }
-
-    public function addAlbumImage(AlbumImage $albumImage): self
-    {
-        if (!$this->albumImages->contains($albumImage)) {
-            $this->albumImages[] = $albumImage;
-            $albumImage->setAlbum($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAlbumImage(AlbumImage $albumImage): self
-    {
-        if ($this->albumImages->contains($albumImage)) {
-            $this->albumImages->removeElement($albumImage);
-            // set the owning side to null (unless already changed)
-            if ($albumImage->getAlbum() === $this) {
-                $albumImage->setAlbum(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|AlbumTag[]
-     */
-    public function getAlbumTags(): Collection
-    {
-        return $this->albumTags;
-    }
-
-    public function addAlbumTag(AlbumTag $albumTag): self
-    {
-        if (!$this->albumTags->contains($albumTag)) {
-            $this->albumTags[] = $albumTag;
-            $albumTag->setAlbum($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAlbumTag(AlbumTag $albumTag): self
-    {
-        if ($this->albumTags->contains($albumTag)) {
-            $this->albumTags->removeElement($albumTag);
-            // set the owning side to null (unless already changed)
-            if ($albumTag->getAlbum() === $this) {
-                $albumTag->setAlbum(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
      */
     public function __toString()
     {
         if(!$this->name) return 'No Albums';
         return (string) $this->name;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+        }
+
+        return $this;
     }
 
 }

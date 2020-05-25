@@ -62,6 +62,8 @@ easy_admin:
                     - description
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
+#                    - { property: 'image', label: 'Image', type: 'image' }
+                    - tags
             form:
                 fields:
                     - name
@@ -70,24 +72,7 @@ easy_admin:
                     - date
                     - description
                     - user
-
-        AlbumImage:
-            class: App\Entity\AlbumImage
-            label: 'AlbumImage'
-            list:
-                fields:
-                    - id
-                    - image
-                    - album
-
-        AlbumTag:
-            class: App\Entity\AlbumTag
-            label: 'AlbumTag'
-            list:
-                fields:
-                    - id
-                    - album
-                    - tag
+                    - tags
 
         Contact:
             class: App\Entity\Contact
@@ -166,6 +151,10 @@ easy_admin:
                 fields:
                     - id
                     - description
+            form:
+                fields:
+                    - description
+                    - albums
 
         User:
             class: App\Entity\User
