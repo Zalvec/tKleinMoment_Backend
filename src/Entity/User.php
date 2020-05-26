@@ -116,11 +116,6 @@ class User implements UserInterface
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
      * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user")
      * @Groups({"user:read","user:write"})
      */
@@ -331,22 +326,6 @@ class User implements UserInterface
     {
         $this->updatedAt = $updatedAt;
 
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): string
-    {
-//        if ($this->deletedAt){
-//            $date = $this->deletedAt;
-//            return date("d-m-Y", $date);
-//        }
-//        return "User is not deleted.";
-        $this->deletedAt = $deletedAt;
         return $this;
     }
 

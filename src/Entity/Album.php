@@ -90,11 +90,6 @@ class Album
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="albums")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({ "admin:album:write" })
@@ -110,6 +105,11 @@ class Album
      * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="albums")
      */
     private $images;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
 
     public function __construct()
     {
@@ -210,18 +210,6 @@ class Album
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
     public function getUser(): ?user
     {
         return $this->user;
@@ -292,6 +280,18 @@ class Album
         if ($this->images->contains($image)) {
             $this->images->removeElement($image);
         }
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

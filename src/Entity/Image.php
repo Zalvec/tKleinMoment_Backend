@@ -72,11 +72,6 @@ class Image
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
      * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="image")
      */
     private $downloadLogs;
@@ -90,6 +85,11 @@ class Image
      * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="images")
      */
     private $albums;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
 
     public function __construct()
     {
@@ -165,18 +165,6 @@ class Image
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
 
         return $this;
     }
@@ -272,6 +260,18 @@ class Image
             $this->albums->removeElement($album);
             $album->removeImage($this);
         }
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

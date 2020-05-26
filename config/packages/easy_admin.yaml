@@ -71,6 +71,7 @@ easy_admin:
                 help: 'Overview of all the albums'
                 fields:
                     - id
+                    - active
                     - name
                     - location
                     - event
@@ -124,6 +125,7 @@ easy_admin:
                 help: 'Overview of all the images'
                 fields:
                     - id
+                    - active
                     - { property: 'path', type: 'image'}
                     - description
                     - alt
