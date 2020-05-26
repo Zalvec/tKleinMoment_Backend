@@ -7,12 +7,23 @@ easy_admin:
 #            favicon: '/public/images/camera-lens.jpg'
 
         # Make the menu overview
-#        menu:
-#            - {label: "Albums"}
-#            - label: "Albums"
-#              children:
-#                  - {entity: Album, label: "Album list", icon: "th-list"}
-#                  - {entity: Album, label: "Add album", icon: "plus", params: {action: "new"}}
+        menu:
+            - label: "Albums"
+              icon: 'image'
+              children: ['Album', 'Image', 'Tag']
+            - label: 'About'
+              icon: 'address-card'
+              children: ['About', 'Contact']
+            - label: 'Users'
+              icon: 'user'
+              children: ['User', 'Message']
+            - label: 'Data'
+              icon: 'chart-bar'
+              children: ['Like', 'DownloadLog']
+            - { label: 'API', url: 'https://wdev.be/wdev_roel/eindwerk/api', target: '_blank', icon: 'wrench'}
+            - { label: 'Homepage', url: 'http://localhost:3000', target: '_blank', icon: 'desktop' }
+
+
     site_name: "'t Klein Moment"
     user:
         display_name: true
@@ -68,15 +79,17 @@ easy_admin:
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
                     - tags
+                    - images
             form:
                 fields:
                     - name
                     - location
                     - event
-                    - date
+                    - { property: 'date', type_options: { format: 'dd/MM/yyyy' }}
                     - description
                     - user
                     - tags
+                    - images
 
         Contact:
             class: App\Entity\Contact
@@ -115,6 +128,7 @@ easy_admin:
                     - description
                     - alt
                     - size
+                    - albums
                     - { property: 'uploadedAt', label: 'Uploaded at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
             form:
@@ -123,6 +137,7 @@ easy_admin:
                     - description
                     - alt
                     - size
+                    - { property: 'albums', type_options: { by_reference: false } }
 
         Like:
             class: App\Entity\Like
@@ -158,10 +173,11 @@ easy_admin:
                 fields:
                     - id
                     - description
+                    - albums
             form:
                 fields:
                     - description
-                    - albums
+                    - { property: 'albums', type_options: { by_reference: false } }
 
         User:
             class: App\Entity\User
