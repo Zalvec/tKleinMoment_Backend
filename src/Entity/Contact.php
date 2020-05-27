@@ -10,16 +10,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get",
- *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *          "get",
- *          "put" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
  *     normalizationContext={"groups"={"contact:read"}},
- *     denormalizationContext={"groups"={"admin:contact:write"}},
  * )
  * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
@@ -34,19 +27,19 @@ class Contact
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
      */
     private $facebookLink;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
      */
     private $instagramLink;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=100)
      */
@@ -54,14 +47,14 @@ class Contact
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
      * @Assert\Length(max=20)
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
      * @Assert\NotBlank()
      * @Assert\Email()
      */

@@ -10,13 +10,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get"
- *     },
- *     itemOperations={
- *          "get"
- *     },
- *     normalizationContext={"groups"={"menu:read"}}
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
+ *     normalizationContext = { "groups" = { "menu:read" } }
  * )
  * @ORM\Entity(repositoryClass=MenuRepository::class)
  */

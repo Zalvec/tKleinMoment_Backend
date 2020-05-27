@@ -12,16 +12,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get",
- *          "post" = { "security" = "is_granted('ROLE_ADMIN')" }
- *     },
- *     itemOperations={
- *          "get",
- *          "put" = { "security" = "is_granted('ROLE_ADMIN')" }
- *     },
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
  *     normalizationContext={"groups"={"about:read"}},
- *     denormalizationContext={"groups"={"admin:about:write"}},
  * )
  * @ORM\Entity(repositoryClass=AboutRepository::class)
  * @Vich\Uploadable()
@@ -37,7 +30,7 @@ class About
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"about:read", "admin:about:write"})
+     * @Groups({"about:read"})
      * @Assert\NotBlank()
      * @Assert\Length(min = 2, max = 100, maxMessage="TableName has to be between 2 and 100 chars")
      */
@@ -45,7 +38,7 @@ class About
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"about:read", "admin:about:write"})
+     * @Groups({"about:read"})
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=100, maxMessage="Header has to be between 2 and 100 chars")
      */
@@ -53,7 +46,7 @@ class About
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"about:read", "admin:about:write"})
+     * @Groups({"about:read"})
      * @Assert\NotBlank()
      * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
@@ -61,6 +54,7 @@ class About
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"about:read"})
      */
     private $image;
 
@@ -126,14 +120,14 @@ class About
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
 
         return $this;
     }
 
-    public function getImageFile(): File
+    public function getImageFile()
     {
         return $this->imageFile;
     }

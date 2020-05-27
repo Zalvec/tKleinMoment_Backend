@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//"security" = "is_granted('ROLE_ADMIN')",
+
 /**
  * @ApiResource(
  *     collectionOperations={
@@ -18,10 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              { "denormalizationContext" = { "groups" = { "message:write" } } }
  *          }
  *     },
- *     itemOperations={
- *          "get",
- *          "delete"
- *     }
+ *     itemOperations={ "get" }
  * )
  * @ORM\Entity(repositoryClass=MessageRepository::class)
  */

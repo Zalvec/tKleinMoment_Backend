@@ -15,17 +15,11 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get",
- *          "post" = { "security" = "is_granted('ROLE_ADMIN')" }
- *     },
+ *     collectionOperations={ "get" },
  *     itemOperations={
- *          "get" = {"normalization_context"={"groups"={"album:item:read"}}},
- *          "put" = { "security" = "is_granted('ROLE_ADMIN')" },
- *          "delete" = { "security" = "is_granted('ROLE_ADMIN')" }
+ *          "get" = { "normalization_context" = { "groups" = { "album:item:read" } } }
  *     },
  *     normalizationContext={"groups"={"album:read"}},
- *     denormalizationContext={"groups"={"admin:album:write"}},
  * )
  * @ORM\Entity(repositoryClass=AlbumRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"name":"partial", "location":"partial", "event":"partial", "date":"exact"})
@@ -42,7 +36,7 @@ class Album
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=255)
      */
@@ -50,7 +44,7 @@ class Album
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=255)
      */
@@ -58,7 +52,7 @@ class Album
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=255)
      */
@@ -66,14 +60,14 @@ class Album
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
      */
     private $date;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({ "album:read", "admin:album:write", "album:item:read" })
+     * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
      * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
@@ -92,7 +86,6 @@ class Album
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="albums")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({ "admin:album:write" })
      */
     private $user;
 
