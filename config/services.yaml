@@ -6,6 +6,8 @@
 parameters:
     cache_adapter: cache.adapter.filesystem
     locale: 'en'
+    app.path.album_images: /img/albums
+    app.path.about_images: /img/about
 
 services:
     # default configuration for services in *this* file

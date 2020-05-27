@@ -116,6 +116,7 @@ class Album
         $this->createdAt = new \DateTimeImmutable();
         $this->tags = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->active = true;
     }
 
     public function getId(): ?int

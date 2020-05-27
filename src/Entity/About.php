@@ -5,8 +5,10 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AboutRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ApiResource(
@@ -22,6 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"admin:about:write"}},
  * )
  * @ORM\Entity(repositoryClass=AboutRepository::class)
+ * @Vich\Uploadable()
  */
 class About
 {
@@ -49,26 +52,28 @@ class About
     private $header;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"about:read", "admin:about:write"})
-     * @Assert\NotBlank()
-     */
-    private $imagePath;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({"about:read", "admin:about:write"})
-     * @Assert\NotBlank()
-     */
-    private $imageName;
-
-    /**
      * @ORM\Column(type="text")
      * @Groups({"about:read", "admin:about:write"})
      * @Assert\NotBlank()
      * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
     private $text;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
+    /**
+     * @Vich\UploadableField(mapping="about_images", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -99,30 +104,6 @@ class About
         return $this;
     }
 
-    public function getImagePath(): ?string
-    {
-        return $this->imagePath;
-    }
-
-    public function setImagePath(string $imagePath): self
-    {
-        $this->imagePath = $imagePath;
-
-        return $this;
-    }
-
-    public function getImageName(): ?string
-    {
-        return $this->imageName;
-    }
-
-    public function setImageName(string $imageName): self
-    {
-        $this->imageName = $imageName;
-
-        return $this;
-    }
-
     public function getText(): ?string
     {
         return $this->text;
@@ -138,6 +119,48 @@ class About
     public function __toString()
     {
         return (string) $this->header;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getImageFile(): File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(File $image = null): void
+    {
+        $this->imageFile = $image;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 
 }

@@ -116,13 +116,13 @@ class User implements UserInterface
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user", cascade={"remove"})
      * @Groups({"user:read","user:write"})
      */
     private $downloadLogs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user", cascade={"remove"})
      * @Groups({"user:read","user:write", "user:item:read"})
      */
     private $likes;

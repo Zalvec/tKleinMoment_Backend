@@ -7,8 +7,10 @@ use App\Repository\ImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ApiResource(
@@ -25,6 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"admin:image:write"}},
  * )
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @Vich\Uploadable()
  */
 class Image
 {
@@ -34,13 +37,6 @@ class Image
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
-     * @Assert\NotBlank()
-     */
-    private $path;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -55,11 +51,11 @@ class Image
      */
     private $alt;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({ "admin:image:write" })
-     */
-    private $size;
+//    /**
+//     * @ORM\Column(type="integer")
+//     * @Groups({ "admin:image:write" })
+//     */
+//    private $size;
 
     /**
      * @ORM\Column(type="datetime")
@@ -72,12 +68,12 @@ class Image
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="image")
+     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="image", cascade={"remove"})
      */
     private $downloadLogs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="image")
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="image", cascade={"remove"})
      */
     private $likes;
 
@@ -91,29 +87,29 @@ class Image
      */
     private $active;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
+    /**
+     * @Vich\UploadableField(mapping="album_images", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
+
     public function __construct()
     {
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->uploadedAt = new \DateTimeImmutable();
         $this->albums = new ArrayCollection();
+        $this->active = true;
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
     }
 
     public function getDescription(): ?string
@@ -140,17 +136,17 @@ class Image
         return $this;
     }
 
-    public function getSize(): ?int
-    {
-        return $this->size;
-    }
-
-    public function setSize(int $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
+//    public function getSize(): ?int
+//    {
+//        return $this->size;
+//    }
+//
+//    public function setSize(int $size): self
+//    {
+//        $this->size = $size;
+//
+//        return $this;
+//    }
 
     public function getUploadedAt(): ?\DateTimeInterface
     {
@@ -274,6 +270,37 @@ class Image
         $this->active = $active;
 
         return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(File $image): void
+    {
+        $this->imageFile = $image;
+
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 
 }

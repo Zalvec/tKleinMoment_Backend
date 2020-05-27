@@ -29,7 +29,7 @@ easy_admin:
         display_name: true
         display_avatar: true
         # firstName resembles getFirstName() or 'firstName' in user
-        # change to view anathor name when logged in
+        # change to view another name when logged in
         name_property_path: 'firstName'
     list:
         title: '%%entity_label%% overview'
@@ -54,14 +54,13 @@ easy_admin:
                 fields:
                     - id
                     - header
-                    - { property: 'image_path', label: 'Image path', type: 'image' }
+                    - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
                     - text
             form:
                 fields:
                     - tableName
                     - header
-                    - { property: 'image_path', label: 'Image path'}
-                    - imageName
+                    - { property: 'imageFile', type: 'vich_image' }
                     - { property: 'text', type: 'text_editor'}
 
         Album:
@@ -79,6 +78,16 @@ easy_admin:
                     - description
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
+                    - tags
+                    - images
+            show:
+                fields:
+                    - id
+                    - name
+                    - location
+                    - event
+                    - date
+                    - description
                     - tags
                     - images
             form:
@@ -126,19 +135,24 @@ easy_admin:
                 fields:
                     - id
                     - active
-                    - { property: 'path', type: 'image'}
+                    - { property: 'image', type: 'image', base_path: '%app.path.album_images%'}
                     - description
                     - alt
-                    - size
                     - albums
                     - { property: 'uploadedAt', label: 'Uploaded at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
+            show:
+                fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.album_images%'}
+                    - id
+                    - description
+                    - albums
+                    - alt
             form:
                 fields:
-                    - { property: 'path'}
+                    - { property: 'imageFile', type: 'vich_image' }
                     - description
                     - alt
-                    - size
                     - { property: 'albums', type_options: { by_reference: false } }
 
         Like:
