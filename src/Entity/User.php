@@ -144,7 +144,7 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->sendMessages = new ArrayCollection();
@@ -166,7 +166,7 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         return $this;
     }
 
@@ -211,7 +211,7 @@ class User implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         return $this;
     }
 
@@ -264,7 +264,7 @@ class User implements UserInterface
     public function setCosplayName(?string $cosplayName): self
     {
         $this->cosplayName = $cosplayName;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         return $this;
     }
 
@@ -288,7 +288,7 @@ class User implements UserInterface
     public function setRegkey(string $regkey): self
     {
         $this->regkey = $regkey;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         return $this;
     }
 

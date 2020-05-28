@@ -69,7 +69,7 @@ class Message
     private $answered;
 
     public function __construct(){
-        $this->sentAt = new \DateTimeImmutable();
+        $this->sentAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         $this->answered = false;
     }
 

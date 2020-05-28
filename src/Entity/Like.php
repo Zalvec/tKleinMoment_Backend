@@ -54,7 +54,7 @@ class Like
     private $user;
 
     public function __construct(){
-        $this->date = new \DateTimeImmutable();
+        $this->date = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
     }
 
     public function getId(): ?int

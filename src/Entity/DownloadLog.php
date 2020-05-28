@@ -51,7 +51,7 @@ class DownloadLog
     private $user;
 
     public function __construct(){
-        $this->downloadedAt = new \DateTimeImmutable();
+        $this->downloadedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
     }
 
     public function getId(): ?int
@@ -90,7 +90,7 @@ class DownloadLog
 
     public function __toString()
     {
-        return (string) $this->id;
+        return (string) $this->user . " " . $this->image;
     }
 
 }

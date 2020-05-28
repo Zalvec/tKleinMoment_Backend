@@ -106,7 +106,7 @@ class Album
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         $this->tags = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->active = true;
@@ -125,7 +125,7 @@ class Album
     public function setName(string $name): self
     {
         $this->name = $name;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
 
         return $this;
     }
@@ -138,7 +138,7 @@ class Album
     public function setLocation(string $location): self
     {
         $this->location = $location;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
 
         return $this;
     }
@@ -151,7 +151,7 @@ class Album
     public function setEvent(string $event): self
     {
         $this->event = $event;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
 
         return $this;
     }
@@ -164,7 +164,7 @@ class Album
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
 
         return $this;
     }
@@ -177,7 +177,7 @@ class Album
     public function setDescription(string $description): self
     {
         $this->description = $description;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
 
         return $this;
     }
@@ -212,7 +212,7 @@ class Album
     public function setUser(?user $user): self
     {
         $this->user = $user;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
 
         return $this;
     }

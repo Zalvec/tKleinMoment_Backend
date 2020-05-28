@@ -102,7 +102,7 @@ class Image
     {
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->uploadedAt = new \DateTimeImmutable();
+        $this->uploadedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         $this->albums = new ArrayCollection();
         $this->active = true;
     }

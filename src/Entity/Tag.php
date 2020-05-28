@@ -14,17 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get",
- *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *          "get",
- *          "put" = {"security" = "is_granted('ROLE_ADMIN')"},
- *          "delete" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
  *     normalizationContext={"groups"={"tag:read"}},
- *     denormalizationContext={"groups"={ "admin:tag:write" }},
  * )
  * @ORM\Entity(repositoryClass=TagRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"description":"exact"})
@@ -40,7 +32,7 @@ class Tag
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({ "admin:tag:write", "tag:read", "album:item:read" })
+     * @Groups({ "tag:read", "album:item:read" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
      */
@@ -105,5 +97,4 @@ class Tag
 
         return $this;
     }
-
 }
