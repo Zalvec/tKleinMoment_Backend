@@ -2,7 +2,7 @@ easy_admin:
     design:
         assets:
             # Changing the favicon (needs editing)
-#            favicon: '/public/images/camera-lens.jpg'
+            favicon: '/img/favicon-camera.jpg'
 
             # adding custom css to dashboard
             css: [ 'css/admin_backend.css']
@@ -47,23 +47,6 @@ easy_admin:
     entities:
         # List the entity class name you want to manage
 
-        About:
-            class: App\Entity\About
-            label: 'About'
-            list:
-                help: 'Overview of the about page'
-                fields:
-                    - id
-                    - header
-                    - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
-                    - text
-            form:
-                fields:
-                    - tableName
-                    - header
-                    - { property: 'imageFile', type: 'vich_image' }
-                    - { property: 'text', type: 'text_editor'}
-
         Album:
             class: App\Entity\Album
             label: 'Album'
@@ -101,7 +84,24 @@ easy_admin:
                     - description
                     - user
                     - tags
-                    - images
+                    - {property: 'images', type: 'collection', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
+
+        About:
+            class: App\Entity\About
+            label: 'About'
+            list:
+                help: 'Overview of the about page'
+                fields:
+                    - id
+                    - header
+                    - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
+                    - text
+            form:
+                fields:
+                    - tableName
+                    - header
+                    - { property: 'imageFile', type: 'vich_image' }
+                    - { property: 'text', type: 'text_editor'}
 
         Contact:
             class: App\Entity\Contact

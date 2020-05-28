@@ -95,7 +95,7 @@ class Album
     private $tags;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="albums")
+     * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="albums", cascade={"persist"})
      */
     private $images;
 
