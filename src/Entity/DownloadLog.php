@@ -7,12 +7,11 @@ use App\Repository\DownloadLogRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-//security="is_granted('ROLE_USER')",
 /**
  * @ApiResource(
  *     collectionOperations={
  *          "get" = {"security" = "is_granted('ROLE_ADMIN')"},
- *          "post"
+ *          "post" = { "security" = "is_granted('ROLE_USER')" }
  *     },
  *     itemOperations={
  *          "get" = { "security" = "is_granted('ROLE_ADMIN')" }
