@@ -77,12 +77,12 @@ class User implements UserInterface
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=50)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
      * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
+     * @Assert\Length(min=2, max=50)
      */
-    private $lastname;
+    private $lastName;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true, unique=true)
@@ -144,13 +144,13 @@ class User implements UserInterface
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->sendMessages = new ArrayCollection();
         $this->receiverMessages = new ArrayCollection();
         $this->albums = new ArrayCollection();
         $this->roles[] = 'ROLE_USER';
-        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -244,14 +244,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function getLastName(): ?string
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
-    public function setLastname(string $lastname): self
+    public function setlastName(string $lastName): self
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -297,10 +297,9 @@ class User implements UserInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
-        return $this;
     }
 
     /**
@@ -489,6 +488,6 @@ class User implements UserInterface
     }
 
     public function getName(){
-        return $this->getFirstName() . ' ' . $this->getLastname();
+        return $this->getFirstName() . ' ' . $this->getLastName();
     }
 }

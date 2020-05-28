@@ -171,7 +171,7 @@ easy_admin:
         Message:
             class: App\Entity\Message
             label: 'Message'
-            disabled_actions: ['delete', 'new']
+            disabled_actions: ['delete', 'new', 'edit']
             list:
                 help: 'Overview of all messages sent to you by members and non-members'
                 fields:
@@ -209,4 +209,13 @@ easy_admin:
                     - roles
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated At', type: 'datetime' }
+            form:
+                fields:
+                    - email
+                    - firstName
+                    - lastName
+                    - cosplayName
+                    - password
+                    - { property: 'plainPassword', label: 'Password' }
+                    - regkey
 
