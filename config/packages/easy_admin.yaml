@@ -171,15 +171,19 @@ easy_admin:
         Message:
             class: App\Entity\Message
             label: 'Message'
-            disabled_actions: ['delete', 'new', 'edit']
+            disabled_actions: ['delete', 'new']
             list:
                 help: 'Overview of all messages sent to you by members and non-members'
                 fields:
                     - id
+                    - {property: 'answered', type: 'toggle'}
                     - sender
                     - { property: 'phoneNumber', label: 'Phone number', type: 'tel' }
                     - text
                     - { property: 'sentAt', label: 'Send date', type: 'datetime' }
+            edit:
+                fields:
+                    - answered
 
         Tag:
             class: App\Entity\Tag

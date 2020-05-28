@@ -63,8 +63,14 @@ class Message
      */
     private $receiver;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $answered;
+
     public function __construct(){
         $this->sentAt = new \DateTimeImmutable();
+        $this->answered = false;
     }
 
     public function getId(): ?int
@@ -127,6 +133,17 @@ class Message
     {
         $this->receiver = $receiver;
 
+        return $this;
+    }
+
+    public function getAnswered(): ?bool
+    {
+        return $this->answered;
+    }
+
+    public function setAnswered(bool $answered): self
+    {
+        $this->answered = $answered;
         return $this;
     }
 
