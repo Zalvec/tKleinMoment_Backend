@@ -154,8 +154,8 @@ easy_admin:
                 fields:
                     - { property: 'imageFile', type: 'vich_image' }
                     - description
-                    - alt
                     - { property: 'albums', type_options: { by_reference: false } }
+                    - alt
 
         Like:
             class: App\Entity\Like
@@ -215,6 +215,18 @@ easy_admin:
                     - roles
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated At', type: 'datetime' }
+            show:
+                fields:
+                    - id
+                    - firstName
+                    - lastName
+                    - cosplayName
+                    - email
+                    - roles
+                    - createdAt
+                    - updatedAt
+                    - downloadLogs
+                    - likes
             form:
                 fields:
                     - email

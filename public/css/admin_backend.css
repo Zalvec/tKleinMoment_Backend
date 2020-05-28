@@ -67,7 +67,7 @@ body {
 
 .text-muted { color: black !important; }
 
-.user-menu-wrapper:hover { color: #6174d1;}
+.user-menu-wrapper:hover { color: #07a82d;}
 
 .user-menu a { color: red; }
 
@@ -82,6 +82,9 @@ body {
 
 .main-sidebar .fa { color: white !important;}
 
+.sidebar-menu li:not(.submenu-active).active .fa,
+.sidebar-menu li:not(.submenu-active).active a { color: #07a82d; }
+
 .treeview,
 .tree { font-size: 1.5rem; }
 
@@ -91,13 +94,17 @@ body {
 .treeview li a { padding-left: 40px;}
 
 .treeview li a:hover,
-.tree a:hover { color: #6174d1;}
+.tree a:hover { color: #07a82d; }
 
 @media (min-width: 992px) {
     .easyadmin-sidebar-width-compact .main-sidebar {
         width: 35px !important;
         padding: 5px;
     }
+}
+
+@media (max-width: 990px ) {
+    #navigation-toggler i { color: white;}
 }
 
 /***********/
@@ -124,6 +131,112 @@ body {
 /****************/
 /* CONTENT MAIN */
 /****************/
+
+/* Tabel */
+.datagrid thead { background-color: #acbfb1; }
+
+.datagrid thead i { color: black; }
+
+.datagrid thead .sorted i { color: darkgreen; }
+
+.datagrid td.actions a{ font-size: 1rem; }
+
+.dropdown-item:hover { background-color: #a7d2aa; }
+
+.table td { word-wrap: break-word; }
+
+.datagrid .easyadmin-thumbnail img {
+    box-shadow: 0 0 0 2px var(--white),0 0 4px 1px var(--gray-600);
+    margin-bottom: 2px;
+    margin-top: 2px;
+    max-height: 100px;
+    max-width: 200px;
+}
+
+/* Show */
+body.show .form-horizontal { background-color: #acbfb1; }
+
+body.show .form-control {
+    border: none;
+    background-color: #f8f8f8;
+}
+
+.form-group label,
+.form-group legend.col-form-label {
+    align-self: self-start;
+    color: var(--text-color);
+    flex: 30% 0 0;
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    text-align: left;
+    max-width: 180px;
+}
+
+.form-control ul li a { color: green;}
+.form-control ul li a:hover { color: darkgreen;}
+
+.form-actions .action-edit { background-color: green; }
+.form-actions .action-edit:hover { background-color: darkgreen; }
+
+.form-actions .action-list { color: green; }
+.form-actions .action-list:hover { color: darkgreen; }
+
+/* Edit */
+.content-body .form-horizontal, .content-body form { background-color: #acbfb1; }
+
+.form-widget textarea.form-control,
+.form-widget input.form-control{
+    box-shadow: none;
+    border: none;
+    background-color: #f8f8f8;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered{
+    background-color: #f8f8f8;
+    border:none;
+    border-radius: 5px;
+}
+
+.large textarea.form-control {
+    height: 100px;
+}
+
+.form-actions .action-save { background-color: green; }
+.form-actions .action-save:hover { background-color: darkgreen; }
+
+/* New */
+.content-body form .row { padding: 15px 40px; }
+
+.form-widget-compound .field-album {
+    background: lightgray;
+    border-radius: 5px;
+    padding: 1.5em;
+    margin-bottom: 2em;
+    box-shadow: 5px 5px 15px 5px black;
+}
+
+.form-widget-compound .form-group .form-widget {
+    flex: auto;
+    width: 350px;
+}
+
+.field-collection-item-action {
+    color: white;
+    background: red;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.field-collection-item-action:hover { background-color: darkred; }
+
+#easyadmin-add-collection-item-album_images {
+    color: white;
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+#easyadmin-add-collection-item-album_images:hover { background-color: darkgreen; }
 
 /******************/
 /* CONTENT FOOTER */
