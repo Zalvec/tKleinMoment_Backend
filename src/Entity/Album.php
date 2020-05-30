@@ -30,6 +30,7 @@ class Album
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
+     * @Groups({ "album:read", "album:item:read" })
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -96,11 +97,13 @@ class Album
 
     /**
      * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="albums", cascade={"persist"})
+     * @Groups({ "album:read", "album:item:read" })
      */
     private $images;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({ "album:read", "album:item:read" })
      */
     private $active;
 
