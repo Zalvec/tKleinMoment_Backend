@@ -1,6 +1,11 @@
-#login_check:
-#  path:     /api/login
-#  methods:  [POST]
+#register:
+#  path: /api/register
+#  controller: App\Controller\AuthController::register
+#  methods: [POST]
+
+user_login:
+  path:     /api/login_check
+  methods:  [POST]
 
 app_login:
   path: /admin/login
