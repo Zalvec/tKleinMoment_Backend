@@ -22,6 +22,8 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AdminAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
+    // Process steps to check if someone can and may login to the admin dashboard
+
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
@@ -60,6 +62,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $credentials;
     }
 
+    // Returns the user if he exists and is an admin
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
@@ -69,11 +72,14 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
+        // if the user isn't found in the database, it return and error message
+        // they remain on the loginpage
         if (!$user) {
-            // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 
+        // if the user that wants to login doesn't have 'ROLE_ADMIN' in roles, they will receive an error message
+        // they remain on the loginpage
         if(!in_array('ROLE_ADMIN', $user->getRoles())){
             throw new CustomUserMessageAuthenticationException("You must be an admin to login.");
         }
@@ -81,6 +87,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $user;
     }
 
+    // Check if the user gave a valid password for retrieved account
     public function checkCredentials($credentials, UserInterface $user)
     {
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
@@ -94,16 +101,14 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $credentials['password'];
     }
 
+    // If all went well, the user will be logged in and redirected to the admin dashboard
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
 
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        /**
-         * Redirect to easyAdmin
-         */
+        // redirect to admin dashboard
         return new RedirectResponse($this->urlGenerator->generate('easyadmin'));
 
     }

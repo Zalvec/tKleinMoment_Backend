@@ -3,6 +3,7 @@
 #  controller: App\Controller\AuthController::register
 #  methods: [POST]
 
+# Login route for the frontend
 user_login:
   path:     /api/login_check
   methods:  [POST]

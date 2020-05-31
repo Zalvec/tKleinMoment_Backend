@@ -37,6 +37,10 @@ class Menu
      */
     private $ordering;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,6 +70,8 @@ class Menu
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de naam van een menu terug*/
     public function __toString()
     {
         return (string) $this->name;

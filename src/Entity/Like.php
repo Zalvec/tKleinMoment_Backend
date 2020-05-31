@@ -53,8 +53,13 @@ class Like
      */
     private $user;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
+
     public function __construct(){
-        $this->date = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->date = new \DateTimeImmutable('now');
     }
 
     public function getId(): ?int
@@ -96,6 +101,8 @@ class Like
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de id van een like terug*/
     public function __toString()
     {
         return (string) $this->id;

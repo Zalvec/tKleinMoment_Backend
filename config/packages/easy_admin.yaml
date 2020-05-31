@@ -24,14 +24,18 @@ easy_admin:
             - { label: 'API', url: 'https://wdev.be/wdev_roel/eindwerk/api', target: '_blank', icon: 'wrench'}
             - { label: 'Homepage', url: 'http://localhost:3000', target: '_blank', icon: 'desktop' }
 
-
+    # Define sitename
     site_name: "'t Klein Moment"
+
+    # Define user info & display
     user:
         display_name: true
         display_avatar: true
         # firstName resembles getFirstName() or 'firstName' in user
         # change to view another name when logged in
         name_property_path: 'firstName'
+
+    # Define the option of each row in your overview (show, edit, delete)
     list:
         title: '%%entity_label%% overview'
         collapse_actions: true
@@ -39,6 +43,8 @@ easy_admin:
             - { name: 'show', icon: 'info-circle', label: 'Show' }
             - { name: 'edit', icon: 'pencil', label: 'Edit' }
             - { name: 'delete', icon: 'trash-alt', label: 'Delete' }
+
+    # Define the formats of certain types
     formats:
         date:     'd/m/Y'
         time:     'H:i'
@@ -48,11 +54,11 @@ easy_admin:
         # List the entity class name you want to manage
 
         Album:
-            class: App\Entity\Album
-            label: 'Album'
-            list:
-                help: 'Overview of all the albums'
-                fields:
+            class: App\Entity\Album                         # Which class (route)
+            label: 'Album'                                  # The name you want to give your entity class
+            list:                                           # All that is visible in the overview page of this entity class
+                help: 'Overview of all the albums'          # A small info text under the title and above the table
+                fields:                                     # A list of all the properties you want to be visible
                     - id
                     - active
                     - name
@@ -60,10 +66,11 @@ easy_admin:
                     - event
                     - date
                     - description
+                    # Which property, what name it will have in the table and what type (changes how it is displayed)
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - tags
                     - images
-            show:
+            show:                                           # All that will be visible when you go to 'show' of an row
                 fields:
                     - id
                     - name
@@ -75,15 +82,19 @@ easy_admin:
                     - images
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
-            form:
+            form:                                           # All that will be visible when you go to 'edit' of an row or 'new' for new item
                 fields:
                     - name
                     - location
                     - event
+                    # Date can be written with the keyboard. There is the posibility to use a dropdown and select the date
                     - { property: 'date', type_options: { widget: single_text }}
                     - description
                     - user
                     - tags
+                    # Enables you to add multiple new images and save them to the database as image and image of that album
+                    # by_reference:false has to be added to enable the saving of the image
+                    # The functionality of images is defined in From/AlbumType
                     - {property: 'images', type: 'collection', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
 
         About:
@@ -94,14 +105,15 @@ easy_admin:
                 fields:
                     - id
                     - header
+                    # Retrieves the image from app.path.about_images and visual show the image
                     - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
                     - text
             form:
                 fields:
                     - tableName
                     - header
-                    - { property: 'imageFile', type: 'vich_image' }
-                    - { property: 'text', type: 'text_editor'}
+                    - { property: 'imageFile', type: 'vich_image' }     # Enables you to upload images
+                    - { property: 'text', type: 'text_editor'}          # Text can be writen in an text_editor and saved that way
 
         Contact:
             class: App\Entity\Contact
@@ -111,15 +123,15 @@ easy_admin:
                 fields:
                     - id
                     - name
-                    - { property: 'email', type: 'email' }
+                    - { property: 'email', type: 'email' }                              # Checks if the input is an email
                     - { property: 'phoneNumber', label: 'Phonenumber', type: 'tel' }
-                    - { property: 'facebookLink', label: 'Facebook', type: 'url' }
+                    - { property: 'facebookLink', label: 'Facebook', type: 'url' }      # Makes the input in show as clickable
                     - { property: 'instagramLink', label: 'Instagram', type: 'url' }
 
         DownloadLog:
             class: App\Entity\DownloadLog
             label: 'DownloadLog'
-            disabled_actions: ['delete', 'new', 'edit']
+            disabled_actions: ['delete', 'new', 'edit']             # Actions that can't be used
             list:
                 help: 'Overview of all the downloaded images. When and by who'
                 fields:
@@ -154,6 +166,7 @@ easy_admin:
                 fields:
                     - { property: 'imageFile', type: 'vich_image' }
                     - description
+                    # You can at this image to different albums when you make it
                     - { property: 'albums', type_options: { by_reference: false } }
                     - alt
 
@@ -178,7 +191,7 @@ easy_admin:
                 help: 'Overview of all messages sent to you by members and non-members'
                 fields:
                     - id
-                    - {property: 'answered', type: 'toggle'}
+                    - {property: 'answered', type: 'toggle'}            # Makes a field toggleable
                     - sender
                     - { property: 'phoneNumber', label: 'Phone number', type: 'tel' }
                     - text
@@ -199,12 +212,13 @@ easy_admin:
             form:
                 fields:
                     - description
+                    # You can add multiple albums, which will receive this tag when saved
                     - { property: 'albums', type_options: { by_reference: false } }
 
         User:
             class: App\Entity\User
             label: 'User'
-            disabled_actions: ['delete']
+            disabled_actions: ['new']
             list:
                 help: 'Overview of all the users of your site'
                 fields:
@@ -227,13 +241,12 @@ easy_admin:
                     - updatedAt
                     - downloadLogs
                     - likes
-            form:
+            edit:
                 fields:
-                    - email
-                    - firstName
-                    - lastName
-                    - cosplayName
-                    - password
-                    - { property: 'plainPassword', label: 'Password' }
-                    - regkey
+                    - { property: 'email', type_options: { disabled: true } }
+                    - { property: 'firstName', label: 'First name', type_options: { disabled: true } }
+                    - { property: 'lastName', label: 'Last name', type_options: { disabled: true } }
+                    - { property: 'cosplayName', label: 'Cosplay name', type_options: { disabled: true } }
+#                    - roles
+
 

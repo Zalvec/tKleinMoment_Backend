@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Image;
-use Doctrine\DBAL\Types\StringType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,6 +10,9 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class AlbumType extends AbstractType
 {
+    /** Adds the option to add multiple images to an album
+     *  Each image you add will have the fields added to the builder
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

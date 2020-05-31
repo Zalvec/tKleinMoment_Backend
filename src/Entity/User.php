@@ -142,9 +142,17 @@ class User implements UserInterface
      */
     private $albums;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
+    /** Bij het aanmaken van een user worden volgende zaken automatisch ingesteld
+     *  - createdAt is het moment van aanmaken
+     *  - de roles van een user staan standaard op 'ROLE_USER'
+     */
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->sendMessages = new ArrayCollection();
@@ -166,7 +174,8 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
+
         return $this;
     }
 
@@ -196,6 +205,7 @@ class User implements UserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -211,7 +221,8 @@ class User implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
+
         return $this;
     }
 
@@ -264,7 +275,8 @@ class User implements UserInterface
     public function setCosplayName(?string $cosplayName): self
     {
         $this->cosplayName = $cosplayName;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
+
         return $this;
     }
 
@@ -288,7 +300,6 @@ class User implements UserInterface
     public function setRegkey(string $regkey): self
     {
         $this->regkey = $regkey;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
         return $this;
     }
 
@@ -327,6 +338,21 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de email van een user terug*/
+    public function __toString(){
+        return $this->email;
+    }
+
+    /** Genereerd de volledige naam van een user */
+    public function getName(){
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
+    /*******************/
+    /*   COLLECTIONS   */
+    /*******************/
 
     /**
      * @return Collection|DownloadLog[]
@@ -465,6 +491,7 @@ class User implements UserInterface
         if (!$this->albums->contains($album)) {
             $this->albums[] = $album;
             $album->setUser($this);
+            $this->updatedAt = new \DateTimeImmutable('now');
         }
 
         return $this;
@@ -477,17 +504,10 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($album->getUser() === $this) {
                 $album->setUser(null);
+                $this->updatedAt = new \DateTimeImmutable('now');
             }
         }
 
         return $this;
-    }
-
-    public function __toString(){
-        return $this->email;
-    }
-
-    public function getName(){
-        return $this->getFirstName() . ' ' . $this->getLastName();
     }
 }

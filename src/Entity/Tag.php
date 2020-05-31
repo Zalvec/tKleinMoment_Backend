@@ -43,6 +43,10 @@ class Tag
      */
     private $albums;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
     public function __construct()
     {
         $this->albums = new ArrayCollection();
@@ -65,10 +69,16 @@ class Tag
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de description van een tag terug*/
     public function __toString()
     {
         return (string) $this->description;
     }
+
+    /*******************/
+    /*   COLLECTIONS   */
+    /*******************/
 
     /**
      * @return Collection|Album[]

@@ -107,12 +107,16 @@ class Album
      */
     private $active;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->tags = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->active = true;
+        $this->active = true;           /** A new album is always set on active */
     }
 
     public function getId(): ?int
@@ -128,7 +132,7 @@ class Album
     public function setName(string $name): self
     {
         $this->name = $name;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -141,7 +145,7 @@ class Album
     public function setLocation(string $location): self
     {
         $this->location = $location;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -154,7 +158,7 @@ class Album
     public function setEvent(string $event): self
     {
         $this->event = $event;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -167,7 +171,7 @@ class Album
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -180,7 +184,7 @@ class Album
     public function setDescription(string $description): self
     {
         $this->description = $description;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -188,11 +192,6 @@ class Album
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -215,19 +214,35 @@ class Album
     public function setUser(?user $user): self
     {
         $this->user = $user;
-        $this->updatedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
 
-    /**
-     * Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
-     */
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        $this->updatedAt = new \DateTimeImmutable('now');
+
+        return $this;
+    }
+
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+       Geeft de naam van een album terug, 'No Albums' als er geen album is*/
     public function __toString()
     {
         if(!$this->name) return 'No Albums';
         return (string) $this->name;
     }
+
+    /*******************/
+    /*   COLLECTIONS   */
+    /*******************/
 
     /**
      * @return Collection|Tag[]
@@ -241,6 +256,7 @@ class Album
     {
         if (!$this->tags->contains($tag)) {
             $this->tags[] = $tag;
+            $this->updatedAt = new \DateTimeImmutable('now');
         }
 
         return $this;
@@ -250,6 +266,7 @@ class Album
     {
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
+            $this->updatedAt = new \DateTimeImmutable('now');
         }
 
         return $this;
@@ -267,6 +284,7 @@ class Album
     {
         if (!$this->images->contains($image)) {
             $this->images[] = $image;
+            $this->updatedAt = new \DateTimeImmutable('now');
         }
 
         return $this;
@@ -276,21 +294,9 @@ class Album
     {
         if ($this->images->contains($image)) {
             $this->images->removeElement($image);
+            $this->updatedAt = new \DateTimeImmutable('now');
         }
 
         return $this;
     }
-
-    public function getActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
 }

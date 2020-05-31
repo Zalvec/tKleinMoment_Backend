@@ -69,6 +69,10 @@ class About
      */
     private $updatedAt;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
     public function getId(): ?int
     {
         return $this->id;
@@ -110,11 +114,6 @@ class About
         return $this;
     }
 
-    public function __toString()
-    {
-        return (string) $this->header;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -132,6 +131,10 @@ class About
         return $this->imageFile;
     }
 
+    /** Als een image wordt opgeladen wordt,
+     *  de naam van de image opgelagen
+     *  de datum opgeslagen onder updated
+     */
     public function setImageFile(File $image = null): void
     {
         $this->imageFile = $image;
@@ -157,4 +160,10 @@ class About
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de header terug*/
+    public function __toString()
+    {
+        return (string) $this->header;
+    }
 }

@@ -60,6 +60,10 @@ class Contact
      */
     private $email;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,6 +129,8 @@ class Contact
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de naam terug*/
     public function __toString()
     {
         return (string) $this->name;

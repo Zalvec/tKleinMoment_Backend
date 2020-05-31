@@ -68,8 +68,15 @@ class Message
      */
     private $answered;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
+    /** Bij het verzenden van een message word het moment opgeslagen
+     *  answered staat standaard op false
+     */
     public function __construct(){
-        $this->sentAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        $this->sentAt = new \DateTimeImmutable('now');
         $this->answered = false;
     }
 
@@ -147,6 +154,8 @@ class Message
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de id van een message terug*/
     public function __toString()
     {
         return (string) $this->id;

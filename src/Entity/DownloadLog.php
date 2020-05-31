@@ -50,8 +50,13 @@ class DownloadLog
      */
     private $user;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
     public function __construct(){
-        $this->downloadedAt = new \DateTimeImmutable(null , new \DateTimeZone('Europe/Brussels'));
+        /** Sets the time of download*/
+        $this->downloadedAt = new \DateTimeImmutable('now');
     }
 
     public function getId(): ?int
@@ -88,9 +93,10 @@ class DownloadLog
         return $this;
     }
 
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft een string terug van met de user zijn naam en de naam van de imagefile*/
     public function __toString()
     {
         return (string) $this->user . " " . $this->image;
     }
-
 }
