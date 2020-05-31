@@ -7,10 +7,10 @@ user_login:
   path:     /api/login_check
   methods:  [POST]
 
-app_login:
-  path: /admin/login
-  controller: App\Controller\SecurityController::login
-
-app_logout:
-  path: /admin/logout
-  methods: GET
+#app_login:
+#  path: /admin/login
+#  controller: App\Controller\SecurityController::login
+#
+#app_logout:
+#  path: /admin/logout
+#  methods: GET

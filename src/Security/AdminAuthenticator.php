@@ -74,6 +74,10 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 
+        if(!in_array('ROLE_ADMIN', $user->getRoles())){
+            throw new CustomUserMessageAuthenticationException("You must be an admin to login.");
+        }
+
         return $user;
     }
 
