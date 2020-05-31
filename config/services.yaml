@@ -6,8 +6,8 @@
 parameters:
     cache_adapter: cache.adapter.filesystem
     locale: 'en'
-    app.path.album_images: /img/albums
-    app.path.about_images: /img/about
+    app.path.album_images: https://wdev.be/wdev_roel/eindwerk/img/albums
+    app.path.about_images: https://wdev.be/wdev_roel/eindwerk/img/about
 
 services:
     # default configuration for services in *this* file
