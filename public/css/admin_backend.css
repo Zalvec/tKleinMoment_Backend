@@ -1,3 +1,4 @@
+/* css for admin dashboard */
 :root {
 
     /*--nav-tabs-link-active-bg: #132352;*/
@@ -268,22 +269,3 @@ body.show .form-control {
 }
 
 .pager .page-item.disabled { cursor: default; }
-
-
-
-
-
-
-
-
-
-
-
-/*.admin-login {*/
-/*    height: 398px;*/
-/*    width: 100%;*/
-/*    flex-direction: column;*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: space-between;*/
-/*}*/
