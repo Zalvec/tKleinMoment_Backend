@@ -62,6 +62,7 @@ easy_admin:
                     - id
                     - active
                     - name
+                    - { property: 'cover', type: 'image', base_path: '%app.path.album_covers%'}
                     - location
                     - event
                     - date
@@ -74,6 +75,7 @@ easy_admin:
                 fields:
                     - id
                     - name
+                    - { property: 'cover', type: 'image', base_path: '%app.path.album_covers%'}
                     - location
                     - event
                     - date
@@ -82,9 +84,21 @@ easy_admin:
                     - images
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
+            edit:
+                fields:
+                    - name
+                    - { property: 'coverFile', type: 'vich_image', type_options: { required: false } }
+                    - location
+                    - event
+                    - date
+                    - description
+                    - user
+                    - tags
+                    - {property: 'images', type: 'collection', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
             form:                                           # All that will be visible when you go to 'edit' of an row or 'new' for new item
                 fields:
                     - name
+                    - { property: 'coverFile', type: 'vich_image', type_options: { required: true } }
                     - location
                     - event
                     # Date can be written with the keyboard. There is the posibility to use a dropdown and select the date
@@ -104,6 +118,7 @@ easy_admin:
                 help: 'Overview of the about page'
                 fields:
                     - id
+                    - tableName
                     - header
                     # Retrieves the image from app.path.about_images and visual show the image
                     - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
@@ -112,7 +127,7 @@ easy_admin:
                 fields:
                     - tableName
                     - header
-                    - { property: 'imageFile', type: 'vich_image' }     # Enables you to upload images
+                    - { property: 'imageFile', type: 'vich_image', type_options: { required: true } }     # Enables you to upload images
                     - { property: 'text', type: 'text_editor'}          # Text can be writen in an text_editor and saved that way
 
         Contact:
@@ -164,7 +179,7 @@ easy_admin:
                     - alt
             form:
                 fields:
-                    - { property: 'imageFile', type: 'vich_image' }
+                    - { property: 'imageFile', type: 'vich_image', type_options: { required: true } }
                     - description
                     # You can at this image to different albums when you make it
                     - { property: 'albums', type_options: { by_reference: false } }

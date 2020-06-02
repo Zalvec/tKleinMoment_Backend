@@ -37,6 +37,8 @@ body {
 
 .wrapper { grid-row-gap: 0 !important;}
 
+img { max-height: 85vh; object-fit: contain;}
+
 /**********/
 /* HEADER */
 /**********/
@@ -127,6 +129,8 @@ body {
 
 .button-action .action-new { background-color: green;}
 
+.button-action .btn:focus { background-color: green !important;}
+
 .content-header-help { font-style: italic;}
 
 /****************/
@@ -204,6 +208,7 @@ body.show .form-control {
 
 .form-actions .action-save { background-color: green; }
 .form-actions .action-save:hover { background-color: darkgreen; }
+.form-actions .btn-primary:focus { background-color: darkgreen !important; }
 
 /* New */
 .content-body form .row { padding: 15px 40px; }

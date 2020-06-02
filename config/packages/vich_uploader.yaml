@@ -11,4 +11,9 @@ vich_uploader:
             uri_prefix: '%app.path.about_images%'
             upload_destination: '%kernel.project_dir%/public/img/about'
             namer: Vich\UploaderBundle\Naming\OrignameNamer
+        album_covers:
+            uri_prefix: '%app.path.album_covers%'
+            upload_destination: '%kernel.project_dir%/public/img/covers'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
+
 

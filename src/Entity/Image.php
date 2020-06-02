@@ -34,21 +34,21 @@ class Image
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @Groups({ "admin:image:write", "image:read", "album:read", "album:item:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({ "admin:image:write", "image:read", "album:read", "album:item:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read", "album:read", "album:item:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      */
     private $alt;
 
@@ -85,13 +85,13 @@ class Image
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({ "admin:image:write", "image:read", "album:read", "album:item:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      */
     private $active;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read", "album:read", "album:item:read" })
+     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
      */
     private $image;
 
@@ -208,14 +208,13 @@ class Image
         return $this->imageFile;
     }
 
-    /** Als een image wordt opgeladen wordt,
+    /** Als een image wordt opgeladen, wordt
      *  de naam van de image opgelagen
      *  de datum opgeslagen onder updated
      */
     public function setImageFile(File $image): void
     {
         $this->imageFile = $image;
-
 
         // VERY IMPORTANT:
         // It is required that at least one field changes if you are using Doctrine,

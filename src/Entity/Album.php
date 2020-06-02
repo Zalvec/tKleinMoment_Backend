@@ -8,10 +8,12 @@ use App\Repository\AlbumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ApiResource(
@@ -24,6 +26,7 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  * @ORM\Entity(repositoryClass=AlbumRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"name":"partial", "location":"partial", "event":"partial", "date":"exact"})
  * @ApiFilter(PropertyFilter::class)
+ * @Vich\Uploadable()
  */
 class Album
 {
@@ -106,6 +109,18 @@ class Album
      * @Groups({ "album:read", "album:item:read" })
      */
     private $active;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({ "album:read", "album:item:read" })
+     */
+    private $cover;
+
+    /**
+     * @Vich\UploadableField(mapping="album_covers", fileNameProperty="cover")
+     * @var File
+     */
+    private $coverFile;
 
     /****************/
     /*   METHODES   */
@@ -230,6 +245,40 @@ class Album
         $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
+    }
+
+    public function getCover(): ?string
+    {
+        return $this->cover;
+    }
+
+    public function setCover(?string $cover): self
+    {
+        $this->cover = $cover;
+
+        return $this;
+    }
+
+    public function getCoverFile()
+    {
+        return $this->coverFile;
+    }
+
+    /** Als een image wordt opgeladen, wordt
+     *  de naam van de image opgelagen
+     *  de datum opgeslagen onder updated
+     */
+    public function setCoverFile(File $cover): void
+    {
+        $this->coverFile = $cover;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($cover) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 
     /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
