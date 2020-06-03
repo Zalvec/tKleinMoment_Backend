@@ -57,6 +57,7 @@ easy_admin:
             class: App\Entity\Album                         # Which class (route)
             label: 'Album'                                  # The name you want to give your entity class
             list:                                           # All that is visible in the overview page of this entity class
+                sort: ['id', 'ASC']                         # Sort all items ascending according to it's ID
                 help: 'Overview of all the albums'          # A small info text under the title and above the table
                 fields:                                     # A list of all the properties you want to be visible
                     - id
@@ -115,6 +116,7 @@ easy_admin:
             class: App\Entity\About
             label: 'About'
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of the about page'
                 fields:
                     - id
@@ -134,6 +136,7 @@ easy_admin:
             class: App\Entity\Contact
             label: 'Contact'
             list:
+                sort: ['id', 'ASC']
                 help: 'Your contact information'
                 fields:
                     - id
@@ -148,6 +151,7 @@ easy_admin:
             label: 'DownloadLog'
             disabled_actions: ['delete', 'new', 'edit']             # Actions that can't be used
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of all the downloaded images. When and by who'
                 fields:
                     - id
@@ -160,6 +164,7 @@ easy_admin:
             class: App\Entity\Image
             label: 'Image'
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of all the images'
                 fields:
                     - id
@@ -190,6 +195,7 @@ easy_admin:
             label: 'Like'
             disabled_actions: ['delete', 'new', 'edit']
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of all the liked images'
                 fields:
                     - id
@@ -203,11 +209,13 @@ easy_admin:
             label: 'Message'
             disabled_actions: ['delete', 'new']
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of all messages sent to you by members and non-members'
                 fields:
                     - id
                     - {property: 'answered', type: 'toggle'}            # Makes a field toggleable
-                    - sender
+                    - email
+                    - name
                     - { property: 'phoneNumber', label: 'Phone number', type: 'tel' }
                     - text
                     - { property: 'sentAt', label: 'Send date', type: 'datetime' }
@@ -219,6 +227,7 @@ easy_admin:
             class: App\Entity\Tag
             label: 'Tag'
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of all the tags that can be added to an album and/or image'
                 fields:
                     - id
@@ -235,6 +244,7 @@ easy_admin:
             label: 'User'
             disabled_actions: ['new']
             list:
+                sort: ['id', 'ASC']
                 help: 'Overview of all the users of your site'
                 fields:
                     - id

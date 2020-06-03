@@ -50,7 +50,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
      * @Assert\NotBlank()
      * @Assert\Email()
      */
@@ -70,7 +70,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
      */
@@ -78,7 +78,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
      */
@@ -133,11 +133,6 @@ class User implements UserInterface
     private $sendMessages;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
-     */
-    private $receiverMessages;
-
-    /**
      * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
      */
     private $albums;
@@ -156,7 +151,6 @@ class User implements UserInterface
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->sendMessages = new ArrayCollection();
-        $this->receiverMessages = new ArrayCollection();
         $this->albums = new ArrayCollection();
         $this->roles[] = 'ROLE_USER';
     }
@@ -410,68 +404,6 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($like->getUser() === $this) {
                 $like->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Message[]
-     */
-    public function getSendMessages(): Collection
-    {
-        return $this->sendMessages;
-    }
-
-    public function addSendMessage(Message $sendMessage): self
-    {
-        if (!$this->sendMessages->contains($sendMessage)) {
-            $this->sendMessages[] = $sendMessage;
-            $sendMessage->setSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSendMessage(Message $sendMessage): self
-    {
-        if ($this->sendMessages->contains($sendMessage)) {
-            $this->sendMessages->removeElement($sendMessage);
-            // set the owning side to null (unless already changed)
-            if ($sendMessage->getSender() === $this) {
-                $sendMessage->setSender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Message[]
-     */
-    public function getReceiverMessages(): Collection
-    {
-        return $this->receiverMessages;
-    }
-
-    public function addReceiverMessage(Message $receiverMessage): self
-    {
-        if (!$this->receiverMessages->contains($receiverMessage)) {
-            $this->receiverMessages[] = $receiverMessage;
-            $receiverMessage->setReceiver($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReceiverMessage(Message $receiverMessage): self
-    {
-        if ($this->receiverMessages->contains($receiverMessage)) {
-            $this->receiverMessages->removeElement($receiverMessage);
-            // set the owning side to null (unless already changed)
-            if ($receiverMessage->getReceiver() === $this) {
-                $receiverMessage->setReceiver(null);
             }
         }
 

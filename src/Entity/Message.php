@@ -13,12 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     collectionOperations={
  *          "get",
- *          "post" = {
- *              "security" = "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
- *              { "denormalizationContext" = { "groups" = { "message:write" } } }
- *          }
+ *          "post"
  *     },
- *     itemOperations={ "get" }
+ *     itemOperations = { "get" },
+ *     denormalizationContext = { "groups" = { "message:write" }}
  * )
  * @ORM\Entity(repositoryClass=MessageRepository::class)
  */
@@ -35,6 +33,7 @@ class Message
      * @ORM\Column(type="text")
      * @Groups({ "message:write" })
      * @Assert\NotBlank()
+     * @Assert\Length(min=20)
      */
     private $text;
 
@@ -52,21 +51,33 @@ class Message
     private $sentAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sendMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $sender;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receiverMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $receiver;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $answered;
+
+    /**
+     * @ORM\Column(type="string", length=180)
+     * @Groups({ "message:write" })
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({ "message:write" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=50)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({ "message:write" })
+     * @Assert\NotBlank()
+     * @Assert\Length(min=2, max=50)
+     */
+    private $lastName;
 
     /****************/
     /*   METHODES   */
@@ -119,30 +130,6 @@ class Message
         $this->sentAt = $sentAt;
     }
 
-    public function getSender(): ?user
-    {
-        return $this->sender;
-    }
-
-    public function setSender(?user $sender): self
-    {
-        $this->sender = $sender;
-
-        return $this;
-    }
-
-    public function getReceiver(): ?user
-    {
-        return $this->receiver;
-    }
-
-    public function setReceiver(?user $receiver): self
-    {
-        $this->receiver = $receiver;
-
-        return $this;
-    }
-
     public function getAnswered(): ?bool
     {
         return $this->answered;
@@ -159,6 +146,47 @@ class Message
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /** Genereerd de volledige naam van een sender */
+    public function getName(){
+        return $this->getFirstName() . ' ' . $this->getLastName();
     }
 
 }
