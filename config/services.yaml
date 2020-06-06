@@ -6,9 +6,12 @@
 parameters:
     cache_adapter: cache.adapter.filesystem
     locale: 'en'
-    app.path.album_images: https://wdev.be/wdev_roel/eindwerk/img/albums
-    app.path.about_images: https://wdev.be/wdev_roel/eindwerk/img/about
-    app.path.album_covers: https://wdev.be/wdev_roel/eindwerk/img/covers
+    app.path.album_images: https://wdev.be/wdev_roel/eindwerk/system/img/albums
+#    app.path.album_images: https://localhost:8000/img/albums
+    app.path.about_images: https://wdev.be/wdev_roel/eindwerk/system/img/about
+#    app.path.about_images: https://localhost:8000/img/about
+    app.path.album_covers: https://wdev.be/wdev_roel/eindwerk/system/img/covers
+#    app.path.about_images: https://localhost:8000/img/covers
 
 
 services:

@@ -1,0 +1,16 @@
+{% if value is not null %}
+    <div class="form-widget">
+        <div class="form-control">
+            {% for image in value %}
+                <a href="#" class="easyadmin-thumbnail" data-featherlight="#easyadmin-lightbox-{{ item.id }}" data-featherlight-close-on-click="anywhere">
+                    <img src="/images/products/{{ image.image }}">
+                    {#                    <img src="{{vich_uploader_asset(item, 'imageFile')}}">#}
+                </a>
+
+                <div id="easyadmin-lightbox-{{ item.id }}" class="easyadmin-lightbox">
+                    <img src="/uploads/files/{{ image.image }}">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
