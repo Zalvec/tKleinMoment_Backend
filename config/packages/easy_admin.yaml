@@ -98,7 +98,7 @@ easy_admin:
                     - {property: 'images', type: 'collection', template: 'images.html.twig', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
             form:                                           # All that will be visible when you go to 'edit' of an row or 'new' for new item
                 fields:
-                    - { type: 'tab', label: 'Album Details'}
+#                    - { type: 'tab', label: 'Album Details'}
                     - name
                     - { property: 'coverFile', type: 'vich_image', type_options: { required: true } }
                     - location
@@ -111,7 +111,7 @@ easy_admin:
                     # Enables you to add multiple new images and save them to the database as image and image of that album
                     # by_reference:false has to be added to enable the saving of the image
                     # The functionality of images is defined in From/AlbumType
-                    - { type: 'tab', label: 'Add images to this album'}
+#                    - { type: 'tab', label: 'Add images to this album'}
                     - {property: 'images', type: 'collection', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
 
         About:

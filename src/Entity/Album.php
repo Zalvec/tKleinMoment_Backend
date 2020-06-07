@@ -118,6 +118,7 @@ class Album
 
     /**
      * @Vich\UploadableField(mapping="album_covers", fileNameProperty="cover")
+     * @Assert\File( maxSize="16M", maxSizeMessage="Upload a file smaller then 16MB")
      * @var File
      */
     private $coverFile;

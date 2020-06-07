@@ -60,6 +60,7 @@ class About
 
     /**
      * @Vich\UploadableField(mapping="about_images", fileNameProperty="image")
+     * @Assert\File( maxSize="16M", maxSizeMessage="Upload a file smaller then 16MB")
      * @var File
      */
     private $imageFile;
