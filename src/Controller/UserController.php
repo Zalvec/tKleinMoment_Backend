@@ -4,70 +4,40 @@ namespace App\Controller;
 
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends EasyAdminController
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $passwordEncoder;
-
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
-    private $password;
-
-    /**
-     * @var string
-     */
-    private $plainPassword;
-
-    /**
-     * UserController constructor.
-     *
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     */
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    protected function persistUserEntity( User $user)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $encodedPassword = $this->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($encodedPassword);
+
+        parent::persistEntity($user);
     }
 
-    public function persistEntity($entity)
+    protected function updateUserEntity(User $user)
     {
-        $this->encodePassword($entity);
-        parent::persistEntity($entity);
+        $encodedPassword = $this->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($encodedPassword);
+
+        parent::updateEntity($user);
     }
 
-    public function updateEntity($entity)
+    private function encodePassword(User $user, $password)
     {
-        $this->encodePassword($entity);
-        parent::updateEntity($entity);
-    }
+        $passwordEncoderFactory = new EncoderFactory([
+            User::class => new MessageDigestPasswordEncoder('sha512', true, 5000)
+        ]);
 
-    public function encodePassword($user)
-    {
-        if (!$user instanceof User || !$user->getPlainPassword()) {
-            return;
-        }
+        $encoder = $passwordEncoderFactory->getEncoder($user);
 
-        // now it's work if plainPassword string was set
-        $user->setPassword(
-            $this->passwordEncoder->encodePassword($user, $user->getPlainPassword())
-        );
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        $this->plainPassword = null;
+        return $encoder->encodePassword($password, $user->getSalt());
     }
 }
+
+
 
 

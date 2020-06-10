@@ -36,7 +36,6 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"})
  * @UniqueEntity(fields={"cosplayName"})
- * @ApiFilter(PropertyFilter::class)
  */
 class User implements UserInterface
 {
@@ -92,9 +91,8 @@ class User implements UserInterface
     private $cosplayName;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
      * @SerializedName("password")
-     * @Groups({"user:write", "user:item:write"})
+     * @Assert\NotBlank()
      */
     private $plainPassword;
 
@@ -130,7 +128,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
      */
-    private $sendMessages;
+    public $sendMessages;
 
     /**
      * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
