@@ -256,7 +256,6 @@ easy_admin:
                     - { property: 'email', type: 'email' }
                     - roles
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
-                    - { property: 'updatedAt', label: 'Updated At', type: 'datetime' }
             show:
                 fields:
                     - id
@@ -266,7 +265,6 @@ easy_admin:
                     - email
                     - roles
                     - createdAt
-                    - updatedAt
                     - downloadLogs
                     - likes
             form:
@@ -275,4 +273,4 @@ easy_admin:
                     - lastName
                     - cosplayName
                     - email
-                    - plainPassword
+                    - { property: 'plainPassword', type: 'text', type_options: { required: true } }
