@@ -62,7 +62,7 @@ if (!isset($_GET['image']))
 	exit();
 }
 
-define('MEMORY_TO_ALLOCATE',	'100M');
+define('MEMORY_TO_ALLOCATE',	'200M');
 define('DEFAULT_QUALITY',		90);
 define('CURRENT_DIR',			dirname(__FILE__));
 define('CACHE_DIR_NAME',		'/imagecache/');

@@ -243,8 +243,9 @@ easy_admin:
 
         User:
             class: App\Entity\User
+            controller: App\Controller\UserController
             label: 'User'
-            disabled_actions: ['new']
+            disabled_actions: ['edit']
             list:
                 sort: ['id', 'ASC']
                 help: 'Overview of all the users of your site'
@@ -268,12 +269,10 @@ easy_admin:
                     - updatedAt
                     - downloadLogs
                     - likes
-            edit:
+            form:
                 fields:
-                    - { property: 'email', type_options: { disabled: true } }
-                    - { property: 'firstName', label: 'First name', type_options: { disabled: true } }
-                    - { property: 'lastName', label: 'Last name', type_options: { disabled: true } }
-                    - { property: 'cosplayName', label: 'Cosplay name', type_options: { disabled: true } }
-#                    - roles
-
-
+                    - firstName
+                    - lastName
+                    - cosplayName
+                    - email
+                    - plainPassword
