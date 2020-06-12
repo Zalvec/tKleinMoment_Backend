@@ -20,6 +20,7 @@ class Contact
 {
     /**
      * @ORM\Id()
+     * @Groups({ "contact:read" })
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */

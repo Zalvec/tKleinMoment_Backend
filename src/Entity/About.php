@@ -23,6 +23,7 @@ class About
 {
     /**
      * @ORM\Id()
+     * @Groups({"about:read"})
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
