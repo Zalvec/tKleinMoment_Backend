@@ -26,7 +26,7 @@ class Menu
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=20)
      * @Groups({"menu:read"})
      */
     private $name;

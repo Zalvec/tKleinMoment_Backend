@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -26,6 +27,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity(repositoryClass=AlbumRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"name":"partial", "location":"partial", "event":"partial", "date":"exact"})
  * @ApiFilter(PropertyFilter::class)
+ * @ApiFilter(OrderFilter::class, properties={ "date": "DESC" })
  * @Vich\Uploadable()
  */
 class Album
@@ -39,10 +41,10 @@ class Album
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=150)
      * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=255)
+     * @Assert\Length(min=2, max=150)
      */
     private $name;
 
@@ -55,10 +57,10 @@ class Album
     private $location;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=150)
      * @Groups({ "album:read", "album:item:read" })
      * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=255)
+     * @Assert\Length(min=2, max=150)
      */
     private $event;
 

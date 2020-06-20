@@ -48,7 +48,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=100, unique=true)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
      * @Assert\NotBlank()
      * @Assert\Email()
@@ -84,21 +84,22 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=50, nullable=true, unique=true)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
-     * @Assert\Length(min=2, max=100)
+     * @Assert\Length(min=2, max=50)
      */
     private $cosplayName;
 
     /**
      * @SerializedName("password")
      * @Assert\NotBlank()
+     * @Groups({"user:write", "user:item:write"})
      */
     private $plainPassword;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups({"user:write", "user:item:read"})
+     * @Groups({ "user:item:read"})
      */
     private $regkey;
 
@@ -115,13 +116,12 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user", cascade={"remove"})
-     * @Groups({"user:read","user:write"})
+     * @Groups({ "user:read" })
      */
     private $downloadLogs;
 
     /**
      * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user", cascade={"remove"})
-     * @Groups({"user:read","user:write", "user:item:read"})
      */
     private $likes;
 

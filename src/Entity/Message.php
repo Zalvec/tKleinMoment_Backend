@@ -38,7 +38,7 @@ class Message
     private $text;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=20)
      * @Groups({ "message:write" })
      * @Assert\NotBlank()
      * @Assert\Length(max=20)
@@ -56,7 +56,7 @@ class Message
     private $answered;
 
     /**
-     * @ORM\Column(type="string", length=180)
+     * @ORM\Column(type="string", length=100)
      * @Groups({ "message:write" })
      * @Assert\NotBlank()
      * @Assert\Email()
@@ -64,7 +64,7 @@ class Message
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Groups({ "message:write" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
@@ -72,7 +72,7 @@ class Message
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Groups({ "message:write" })
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=50)
@@ -108,12 +108,12 @@ class Message
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(int $phoneNumber): self
+    public function setPhoneNumber(string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 

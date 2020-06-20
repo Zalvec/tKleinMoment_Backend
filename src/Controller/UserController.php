@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends EasyAdminController
 {
+    // Bij creatie van de gebruiker: het wachtwoord vervangen met het geëncrypteerde wachtwoord
     protected function persistUserEntity( User $user)
     {
         $encodedPassword = $this->encodePassword($user, $user->getPlainPassword());
@@ -18,6 +19,7 @@ class UserController extends EasyAdminController
         parent::persistEntity($user);
     }
 
+    // Bij updaten van de gebruiker: het wachtwoord vervangen met het geëncrypteerde wachtwoord
     protected function updateUserEntity(User $user)
     {
         $encodedPassword = $this->encodePassword($user, $user->getPlainPassword());
@@ -26,6 +28,7 @@ class UserController extends EasyAdminController
         parent::updateEntity($user);
     }
 
+    // Encrypteren van het wachtwoord
     private function encodePassword(User $user, $password)
     {
         $passwordEncoderFactory = new EncoderFactory([

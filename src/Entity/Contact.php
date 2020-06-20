@@ -39,15 +39,15 @@ class Contact
     private $instagramLink;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=50)
      * @Groups({ "contact:read" })
      * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
+     * @Assert\Length(min=2, max=50)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({ "contact:read" })
      * @Assert\Length(max=20)
      */
@@ -106,12 +106,12 @@ class Contact
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?int $phoneNumber): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 

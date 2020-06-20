@@ -20,9 +20,8 @@ easy_admin:
               children: ['User', 'Message']
             - label: 'Data'
               icon: 'chart-bar'
-              children: ['Like', 'DownloadLog']
-            - { label: 'API', url: 'https://wdev.be/wdev_roel/eindwerk/api', target: '_blank', icon: 'wrench'}
-            - { label: 'Homepage', url: 'http://localhost:3000', target: '_blank', icon: 'desktop' }
+              children: ['DownloadLog']
+            - { label: 'Homepage', url: 'https://t-klein-moment.vercel.app/', target: '_blank', icon: 'desktop' }
 
     # Define sitename
     site_name: "'t Klein Moment"
@@ -37,12 +36,13 @@ easy_admin:
 
     # Define the option of each row in your overview (show, edit, delete)
     list:
-        title: '%%entity_label%% overview'
+        title: '%%entity_label%%'
         collapse_actions: true
         actions:
             - { name: 'show', icon: 'info-circle', label: 'Show' }
             - { name: 'edit', icon: 'pencil', label: 'Edit' }
             - { name: 'delete', icon: 'trash-alt', label: 'Delete' }
+        batch_actions: ['delete']                                       # Allow deleting multiple items at once
 
     # Define the formats of certain types
     formats:
@@ -58,12 +58,13 @@ easy_admin:
             label: 'Album'                                  # The name you want to give your entity class
             list:                                           # All that is visible in the overview page of this entity class
                 sort: ['id', 'ASC']                         # Sort all items ascending according to it's ID
-                help: 'Overview of all the albums'          # A small info text under the title and above the table
+                help: 'Overzicht van alle albums'           # A small info text under the title and above the table
                 fields:                                     # A list of all the properties you want to be visible
                     - id
                     - active
                     - name
                     - { property: 'cover', type: 'image', base_path: '%app.path.album_covers%'}
+#                    - { property: 'cover', type: 'image', base_path: 'https://wdev.be/wdev_roel/eindwerk/image.php?img.jpg&width=500&image=/wdev_roel/eindwerk/system/img/covers'}
                     - location
                     - event
                     - date
@@ -118,8 +119,9 @@ easy_admin:
             class: App\Entity\About
             label: 'About'
             list:
+                batch_actions: ['-delete']
                 sort: ['id', 'ASC']
-                help: 'Overview of the about page'
+                help: 'Overzicht van alle about segmenten'
                 fields:
                     - id
                     - tableName
@@ -127,6 +129,11 @@ easy_admin:
                     # Retrieves the image from app.path.about_images and visual show the image
                     - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
                     - text
+            edit:
+                fields:
+                    - header
+                    - { property: 'imageFile', type: 'vich_image', type_options: { required: false } }
+                    - { property: 'text', type: 'text_editor'}
             form:
                 fields:
                     - tableName
@@ -138,8 +145,9 @@ easy_admin:
             class: App\Entity\Contact
             label: 'Contact'
             list:
+                batch_actions: ['-delete']
                 sort: ['id', 'ASC']
-                help: 'Your contact information'
+                help: 'De contact informatie'
                 fields:
                     - id
                     - name
@@ -154,7 +162,7 @@ easy_admin:
             disabled_actions: ['delete', 'new', 'edit']             # Actions that can't be used
             list:
                 sort: ['id', 'ASC']
-                help: 'Overview of all the downloaded images. When and by who'
+                help: "Overzicht van alle gedownloade foto's. Door wie en wanneer"
                 fields:
                     - id
                     - user
@@ -167,7 +175,7 @@ easy_admin:
             label: 'Image'
             list:
                 sort: ['id', 'ASC']
-                help: 'Overview of all the images'
+                help: "Overzicht van alle foto's die in een album staan of kunnen toegevoegd worden aan één"
                 fields:
                     - id
                     - active
@@ -191,28 +199,13 @@ easy_admin:
                     # You can at this image to different albums when you make it
                     - { property: 'albums', type_options: { by_reference: false } }
                     - alt
-
-        Like:
-            class: App\Entity\Like
-            label: 'Like'
-            disabled_actions: ['delete', 'new', 'edit']
-            list:
-                sort: ['id', 'ASC']
-                help: 'Overview of all the liked images'
-                fields:
-                    - id
-                    - user
-                    - { property: 'user.name', label: 'User name' }
-                    - image
-                    - { property: 'date', type: 'datetime' }
-
         Message:
             class: App\Entity\Message
             label: 'Message'
             disabled_actions: ['delete', 'new']
             list:
                 sort: ['id', 'ASC']
-                help: 'Overview of all messages sent to you by members and non-members'
+                help: 'Alle contactberichten die verzonden zijn door gebruikers en ingelogde gebruikers'
                 fields:
                     - id
                     - {property: 'answered', type: 'toggle'}            # Makes a field toggleable
@@ -229,8 +222,9 @@ easy_admin:
             class: App\Entity\Tag
             label: 'Tag'
             list:
+                batch_actions: ['-delete']
                 sort: ['id', 'ASC']
-                help: 'Overview of all the tags that can be added to an album and/or image'
+                help: 'Overzcicht van alle tags die kunnen toegevoegd worden aan één of meerdere albums'
                 fields:
                     - id
                     - description
@@ -247,8 +241,9 @@ easy_admin:
             label: 'User'
             disabled_actions: ['edit']
             list:
+                batch_actions: ['-delete']
                 sort: ['id', 'ASC']
-                help: 'Overview of all the users of your site'
+                help: 'Overzicht van alle gebruikers die een account hebben aangemaakt'
                 fields:
                     - id
                     - name

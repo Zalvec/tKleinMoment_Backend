@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class JWTCreatedListener
 {
+    // Creation of the JWT and modifying it's payload
     /**
      * @var RequestStack
      */
@@ -50,9 +51,10 @@ class JWTCreatedListener
          */
         $payload = $event->getData();
         $payload['id'] = $user->getId();
-        $payload['firstName'] = $user->getFirstName();
-        $payload['lastName'] = $user->getLastName();
+        $payload['name'] = $user->getName();
         $payload['ip'] = $request->getClientIp();
+        $payload['cosplay'] = $user->getCosplayName();
+        $payload['membershipDuration'] = $user->getCreatedAtAgo();
 
         /**
          * Payload is set for JWT

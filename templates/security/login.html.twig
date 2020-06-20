@@ -15,14 +15,14 @@
                 <div class="d-flex align-items-center">
                     <div class="col">
                         <h1 class="h1 mb-2 font-weight-normal text-center">'t Klein Moment</h1>
-                        <h2 class="h3 mb-3 font-weight-normal text-center"> Welcome admin</h2>
+                        <h2 class="h3 mb-3 font-weight-normal text-center"> Welkom admin</h2>
 
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
                             <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
 
-                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Wachtwoord" required>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
 
                         {#

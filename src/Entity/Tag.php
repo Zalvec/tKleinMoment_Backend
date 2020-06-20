@@ -31,10 +31,10 @@ class Tag
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=30)
      * @Groups({ "tag:read", "album:item:read" })
      * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\Length(min=2, max=30)
      */
     private $description;
 

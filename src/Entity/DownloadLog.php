@@ -10,13 +10,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = {"security" = "is_granted('ROLE_ADMIN')"},
- *          "post" = { "security" = "is_granted('ROLE_USER')" }
+ *          "get",
+ *          "post"
  *     },
  *     itemOperations={
- *          "get" = { "security" = "is_granted('ROLE_ADMIN')" }
+ *          "get"
  *     },
- *     normalizationContext={"groups"={"admin:download:read"}},
+ *     normalizationContext={"groups"={"download:read"}},
  *     denormalizationContext={"groups"={"download:write"}},
  * )
  * @ORM\Entity(repositoryClass=DownloadLogRepository::class)
@@ -32,21 +32,21 @@ class DownloadLog
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({ "admin:download:read" })
+     * @Groups({ "download:read" })
      */
     private $downloadedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="downloadLogs")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({ "admin:download:read", "download:write" })
+     * @Groups({ "download:read", "download:write" })
      */
     private $image;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="downloadLogs")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({ "admin:download:read", "download:write" })
+     * @Groups({ "download:read", "download:write" })
      */
     private $user;
 

@@ -15,16 +15,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get",
- *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
+ *          "get"
  *     },
  *     itemOperations={
- *          "get",
- *          "put" = {"security" = "is_granted('ROLE_ADMIN')"},
- *          "delete" = { "security" = "is_granted('ROLE_ADMIN')"}
+ *          "get"
  *     },
  *     normalizationContext={"groups"={"image:read"}},
- *     denormalizationContext={"groups"={"admin:image:write"}},
  * )
  * @ORM\Entity(repositoryClass=ImageRepository::class)
  * @Vich\Uploadable()
@@ -34,29 +30,23 @@ class Image
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Groups({ "image:read", "album:item:read" })
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Groups({ "image:read", "album:item:read" })
      * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
      */
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @ORM\Column(type="string", length=150)
+     * @Groups({ "image:read", "album:item:read" })
      */
     private $alt;
-
-//    /**
-//     * @ORM\Column(type="integer")
-//     * @Groups({ "admin:image:write" })
-//     */
-//    private $size;
 
     /**
      * @ORM\Column(type="datetime")
@@ -85,13 +75,13 @@ class Image
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Groups({ "image:read", "album:item:read" })
      */
     private $active;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({ "admin:image:write", "image:read", "album:item:read" })
+     * @Groups({ "image:read", "album:item:read" })
      */
     private $image;
 
@@ -148,18 +138,6 @@ class Image
 
         return $this;
     }
-
-//    public function getSize(): ?int
-//    {
-//        return $this->size;
-//    }
-//
-//    public function setSize(int $size): self
-//    {
-//        $this->size = $size;
-//
-//        return $this;
-//    }
 
     public function getUploadedAt(): ?\DateTimeInterface
     {
@@ -328,7 +306,4 @@ class Image
 
         return $this;
     }
-
-
-
 }

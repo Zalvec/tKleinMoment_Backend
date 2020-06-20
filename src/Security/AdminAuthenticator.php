@@ -23,6 +23,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class AdminAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
 {
     // Process steps to check if someone can and may login to the admin dashboard
+    // This process runs through easyadmin, not through the API endpoint
 
     use TargetPathTrait;
 
@@ -41,12 +42,14 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         $this->passwordEncoder = $passwordEncoder;
     }
 
+    // check if the route and method are correct
     public function supports(Request $request)
     {
         return self::LOGIN_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
+    // get the credentials of the user that wants to login
     public function getCredentials(Request $request)
     {
         $credentials = [
