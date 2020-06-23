@@ -38,9 +38,8 @@ class Message
     private $text;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
      * @Assert\Length(max=20)
      */
     private $phoneNumber;

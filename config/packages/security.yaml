@@ -33,12 +33,12 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
 #   only accessable when send with JWT token
-#        api:
-#            pattern: ^/api
-#            stateless: true
-#            guard:
-#                authenticators:
-#                    - lexik_jwt_authentication.jwt_token_authenticator
+        api:
+            pattern: ^/api/users/
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
 
         dev:
