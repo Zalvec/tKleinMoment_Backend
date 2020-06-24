@@ -13,14 +13,20 @@ security:
                 property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
-        # Frontend login & security
+        # Refresh Token
+        refresh:
+            pattern:  ^/api/token/refresh
+            stateless: true
+            anonymous: true
+
+        # Front-end login & security
         login:
             pattern:   ^/api/login_check
             stateless: true
             anonymous: true
             json_login:
                 check_path: /api/login_check
-#                username_path: email
+                username_path: email
 #                password_path: password
                 success_handler:    lexik_jwt_authentication.handler.authentication_success
                 failure_handler:    lexik_jwt_authentication.handler.authentication_failure
@@ -32,14 +38,13 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
-#   only accessable when send with JWT token
+        # API endpoint for user put, delete and specific get
         api:
             pattern: ^/api/users/
             stateless: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-
 
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -76,6 +81,7 @@ security:
     access_control:
 
         # access restriction for api endpoints
+        - { path: ^/api/token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
@@ -83,9 +89,3 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_ADMIN }
-
-#       when firewall api is active
-#        - { path: ^/api/download_logs, roles: IS_AUTHENTICATED_FULLY }
-#        - { path: ^/api/likes, roles: IS_AUTHENTICATED_FULLY }
-
-

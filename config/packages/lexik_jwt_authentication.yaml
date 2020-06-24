@@ -4,3 +4,4 @@ lexik_jwt_authentication:
     pass_phrase:      'Elftopia' # required for token creation, usage of an environment variable is recommended
     token_ttl:        3600  # validity period of jwt
 
+

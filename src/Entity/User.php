@@ -175,7 +175,6 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-//        if ($this->cosplayName) return (string) $this->cosplayName;
         return (string) $this->email;
     }
 

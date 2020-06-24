@@ -37,7 +37,7 @@ class JWTCreatedListener
      */
     public function onJWTCreated(JWTCreatedEvent $event)
     {
-        $request = $this->requestStack->getCurrentRequest();
+//        $request = $this->requestStack->getCurrentRequest();
         $userName = $event->getUser()->getUsername();
 
         /**
@@ -51,8 +51,10 @@ class JWTCreatedListener
          */
         $payload = $event->getData();
         $payload['id'] = $user->getId();
-        $payload['name'] = $user->getName();
-        $payload['ip'] = $request->getClientIp();
+        $payload['email'] = $user->getEmail();
+        $payload['firstName'] = $user->getFirstName();
+        $payload['lastName'] = $user->getLastName();
+//        $payload['ip'] = $request->getClientIp();
         $payload['cosplay'] = $user->getCosplayName();
         $payload['membershipDuration'] = $user->getCreatedAtAgo();
 
