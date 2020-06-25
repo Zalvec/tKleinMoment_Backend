@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -23,6 +25,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *     normalizationContext={"groups"={"image:read"}},
  * )
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @ApiFilter(BooleanFilter::class, properties={"active"})
  * @Vich\Uploadable()
  */
 class Image
