@@ -112,7 +112,7 @@ class Message
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 
