@@ -123,11 +123,6 @@ class User implements UserInterface
     private $likes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
-     */
-    public $sendMessages;
-
-    /**
      * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
      */
     private $albums;

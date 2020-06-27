@@ -37,7 +37,10 @@ body {
 
 .wrapper { grid-row-gap: 0 !important;}
 
-img { max-height: 85vh; object-fit: contain;}
+img {
+    max-height: 85vh;
+    object-fit: contain;
+}
 
 /**********/
 /* HEADER */

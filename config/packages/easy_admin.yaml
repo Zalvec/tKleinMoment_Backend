@@ -9,19 +9,13 @@ easy_admin:
 
         # Make the menu overview
         menu:
-            - label: "Albums"
-              icon: 'image'
-              children: ['Album', 'Image', 'Tag']
-            - label: 'About'
-              icon: 'address-card'
-              children: ['About', 'Contact']
-            - label: 'Users'
-              icon: 'user'
-              children: ['User', 'Message']
-            - label: 'Data'
-              icon: 'chart-bar'
-              children: ['DownloadLog']
+            - {label: "Albums", icon: 'image', children: ['Album', 'Image', 'Tag'] }
+            - {label: 'About', icon: 'address-card', children: ['About', 'Contact'] }
+            - {label: 'Users', icon: 'user', children: ['User', 'Message'] }
+            - {label: 'Data', icon: 'chart-bar', children: ['DownloadLog'] }
             - { label: 'Homepage', url: 'https://t-klein-moment.vercel.app/', target: '_blank', icon: 'desktop' }
+            - { label: 'Deploy your changes. Takes 1-2 minutes.' }
+            - { label: 'Deploy', url: 'https://api.vercel.com/v1/integrations/deploy/QmfHfr81rrhkeWGB5QDf5oFxPZcnUVYuF6bmqihEBSEqsQ/m62dUx5kjA', target: '_blank', icon: 'server' }
 
     # Define sitename
     site_name: "'t Klein Moment"
@@ -55,6 +49,8 @@ easy_admin:
 
         Album:
             class: App\Entity\Album                         # Which class (route)
+            templates:
+                field_image: 'admin/album/cover.html.twig'
             label: 'Album'                                  # The name you want to give your entity class
             list:                                           # All that is visible in the overview page of this entity class
                 sort: ['id', 'ASC']                         # Sort all items ascending according to it's ID
@@ -63,8 +59,7 @@ easy_admin:
                     - id
                     - active
                     - name
-                    - { property: 'cover', type: 'image', base_path: '%app.path.album_covers%'}
-#                    - { property: 'cover', type: 'image', base_path: 'https://wdev.be/wdev_roel/eindwerk/image.php?img.jpg&width=500&image=/wdev_roel/eindwerk/system/img/covers'}
+                    - { property: 'cover', type: 'image'}
                     - location
                     - event
                     - date
@@ -77,13 +72,14 @@ easy_admin:
                 fields:
                     - id
                     - name
-                    - { property: 'cover', type: 'image', base_path: '%app.path.album_covers%'}
+                    - { property: 'cover', type: 'image'}
                     - location
                     - event
                     - date
                     - description
                     - tags
-                    - images
+#                    - images
+                    - {property: 'images', type: 'collection', template: '/admin/album/imagesList.html.twig'}
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
             edit:
@@ -96,7 +92,7 @@ easy_admin:
                     - description
                     - user
                     - tags
-                    - {property: 'images', type: 'collection', template: 'images.html.twig', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
+                    - {property: 'images', type: 'collection', template: '/admin/album/images.html.twig', type_options: {entry_type: 'App\Form\AlbumType' , 'by_reference': false}}
             form:                                           # All that will be visible when you go to 'edit' of an row or 'new' for new item
                 fields:
 #                    - { type: 'tab', label: 'Album Details'}
@@ -117,6 +113,8 @@ easy_admin:
 
         About:
             class: App\Entity\About
+            templates:
+                field_image: 'admin/about/image.html.twig'
             label: 'About'
             list:
                 batch_actions: ['-delete']
@@ -127,7 +125,14 @@ easy_admin:
                     - tableName
                     - header
                     # Retrieves the image from app.path.about_images and visual show the image
-                    - { property: 'image', type: 'image', base_path: '%app.path.about_images%'}
+                    - { property: 'image', type: 'image'}
+                    - text
+            show:
+                fields:
+                    - id
+                    - tableName
+                    - header
+                    - { property: 'image', type: 'image'}
                     - text
             edit:
                 fields:
@@ -146,6 +151,7 @@ easy_admin:
             label: 'Contact'
             list:
                 batch_actions: ['-delete']
+                actions: ['-search']
                 sort: ['id', 'ASC']
                 help: 'De contact informatie'
                 fields:
@@ -158,6 +164,8 @@ easy_admin:
 
         DownloadLog:
             class: App\Entity\DownloadLog
+            templates:
+                field_image: 'admin/download_log/image.html.twig'
             label: 'DownloadLog'
             disabled_actions: ['delete', 'new', 'edit']             # Actions that can't be used
             list:
@@ -167,11 +175,20 @@ easy_admin:
                     - id
                     - user
                     - { property: 'user.name', label: 'User name' }
-                    - image
+                    - { property: 'image', type: 'image'}
+                    - { property: 'downloadedAt', label: 'Downloaded at', type: 'datetime' }
+            show:
+                fields:
+                    - id
+                    - user
+                    - { property: 'user.name', label: 'User name', type: 'text' }
+                    - { property: 'image', type: 'image'}
                     - { property: 'downloadedAt', label: 'Downloaded at', type: 'datetime' }
 
         Image:
             class: App\Entity\Image
+            templates:
+                field_image: 'admin/image/image.html.twig'
             label: 'Image'
             list:
                 sort: ['id', 'ASC']
@@ -179,7 +196,7 @@ easy_admin:
                 fields:
                     - id
                     - active
-                    - { property: 'image', type: 'image', base_path: '%app.path.album_images%'}
+                    - { property: 'image', type: 'image'}
                     - description
                     - alt
                     - albums
@@ -187,7 +204,7 @@ easy_admin:
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }
             show:
                 fields:
-                    - { property: 'image', type: 'image', base_path: '%app.path.album_images%'}
+                    - { property: 'image', type: 'image'}
                     - id
                     - description
                     - albums
@@ -199,6 +216,13 @@ easy_admin:
                     # You can at this image to different albums when you make it
                     - { property: 'albums', type_options: { by_reference: false } }
                     - alt
+            edit:
+                fields:
+                    - { property: 'imageFile', type: 'vich_image', type_options: { required: false } }
+                    - description
+                    - { property: 'albums', type_options: { by_reference: false } }
+                    - alt
+
         Message:
             class: App\Entity\Message
             label: 'Message'
