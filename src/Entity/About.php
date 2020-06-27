@@ -32,24 +32,26 @@ class About
     /**
      * @ORM\Column(type="string", length=100)
      * @Groups({"about:read"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min = 2, max = 100, maxMessage="TableName has to be between 2 and 100 chars")
+     * @Assert\NotBlank(message="Gelieve deze about een beschrijving of naam te geven die enkel voor u zichtbaar is.")
+     * @Assert\Length(min = 2, minMessage="Beschrijving / naam moet minstens 2 karakters lang zijn.",
+     *                max = 100, maxMessage="Beschrijving / naam kan maximaal 100 karakters lang zijn.")
      */
     private $tableName;
 
     /**
      * @ORM\Column(type="string", length=100)
      * @Groups({"about:read"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100, maxMessage="Header has to be between 2 and 100 chars")
+     * @Assert\NotBlank(message="Gelieve een titel in te vullen")
+     * @Assert\Length(min=2, minMessage="Titel moet minstens 2 karakters lang zijn.",
+     *                max=100, maxMessage="Titel mag maximaal 100 karakters lang zijn.")
      */
     private $header;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"about:read"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
+     * @Assert\NotBlank(message="Gelieve een stuk tekst in te vullen.")
+     * @Assert\Length(min=10, minMessage="Tekst moet minstens 10 karakters lang zijn.")
      */
     private $text;
 
@@ -61,7 +63,7 @@ class About
 
     /**
      * @Vich\UploadableField(mapping="about_images", fileNameProperty="image")
-     * @Assert\File( maxSize="16M", maxSizeMessage="Upload a file smaller then 16MB")
+     * @Assert\File( maxSize="16M", maxSizeMessage="Uploadgrootte is maximaal 16MB.")
      * @var File
      */
     private $imageFile;

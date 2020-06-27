@@ -32,8 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"user:write"}},
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"})
- * @UniqueEntity(fields={"cosplayName"})
+ * @UniqueEntity(fields={"email"}, message="Er bestaat reeds een gebruiker met dit emailadres.")
+ * @UniqueEntity(fields={"cosplayName"}, message="Er bestaat reeds een gebruiker met deze cosplay naam.")
  */
 class User implements UserInterface
 {
@@ -48,8 +48,8 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=100, unique=true)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(message="Gelieve een geldig emailadres in te geven.")
+     * @Assert\Email(message="Gelieve een geldig emailadres in te geven.")
      */
     private $email;
 
@@ -68,29 +68,34 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=50)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\NotBlank(message="Gelieve je voornaam in te vullen")
+     * @Assert\Length(min=2, minMessage="Voornaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Voornaam kan maximaal 50 karakters lang zijn.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\NotBlank(message="Gelieve je achternaam in te vullen")
+     * @Assert\Length(min=2, minMessage="Achternaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Achternaam kan maximaal 50 karakters lang zijn.")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true, unique=true)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
-     * @Assert\Length(min=2, max=50)
+     * @Assert\Length(min=2, minMessage="Cosplay naam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Cosplay naam kan maximaal 50 karakters lang zijn.")
      */
     private $cosplayName;
 
     /**
      * @SerializedName("password")
      * @Groups({"user:write", "user:item:write"})
+     * @Assert\NotBlank(message="Gelieve een geldig wachtwoord in te geven.")
+     * @Assert\Length(min="8", minMessage="Je wachtwoord moet minstens 8 karakters lang zijn.")
      */
     private $plainPassword;
 

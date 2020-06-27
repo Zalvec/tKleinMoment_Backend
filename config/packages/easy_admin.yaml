@@ -78,7 +78,6 @@ easy_admin:
                     - date
                     - description
                     - tags
-#                    - images
                     - {property: 'images', type: 'collection', template: '/admin/album/imagesList.html.twig'}
                     - { property: 'createdAt', label: 'Created at', type: 'datetime' }
                     - { property: 'updatedAt', label: 'Updated at', type: 'datetime' }

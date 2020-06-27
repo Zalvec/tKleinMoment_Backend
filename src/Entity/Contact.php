@@ -29,35 +29,38 @@ class Contact
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({ "contact:read" })
+     * @Assert\Url(message="De url '{{value}}' is geen geldige url.")
      */
     private $facebookLink;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({ "contact:read" })
+     * @Assert\Url(message="De url '{{value}}' is geen geldige url.")
      */
     private $instagramLink;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Groups({ "contact:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\NotBlank(message="Gelieve een (bedrijfs)-naam in te vullen.")
+     * @Assert\Length(min=2, minMessage="De (bedrijfs-)naam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="De (bedrijfs-)naam kan maximaal 50 karakters lang zijn.")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({ "contact:read" })
-     * @Assert\Length(max=20)
+     * @Assert\Length(min="8", max=20)
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=100)
      * @Groups({ "contact:read" })
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(message="Gelieve een geldig emailadres in te geven")
+     * @Assert\Email(message="Gelieve een geldig emailadres in te geven")
      */
     private $email;
 

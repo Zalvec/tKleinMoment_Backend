@@ -41,13 +41,16 @@ class Image
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({ "image:read", "album:item:read" })
-     * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
+     * @Assert\Length(min=10, minMessage="Bericht moet minstens 10 karakters lang zijn.")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=150)
      * @Groups({ "image:read", "album:item:read" })
+     * @Assert\NotBlank(message="Een foto moet een alt beschrijving hebben.")
+     * @Assert\Length(min="2", minMessage="De alt-beschrijving moet minstens 2 kakarters lang zijn.",
+     *                max="150", maxMessage="De alt-beschrijving kan maximaal 150 karakters lang zijn.")
      */
     private $alt;
 
@@ -90,7 +93,7 @@ class Image
 
     /**
      * @Vich\UploadableField(mapping="album_images", fileNameProperty="image")
-     * @Assert\File( maxSize="16M", maxSizeMessage="Upload a file smaller then 16MB")
+     * @Assert\File( maxSize="16M", maxSizeMessage="Uploadgrootte is maximaal 16MB.")
      * @var File
      */
     private $imageFile;

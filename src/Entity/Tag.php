@@ -33,8 +33,9 @@ class Tag
     /**
      * @ORM\Column(type="string", length=30)
      * @Groups({ "tag:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=30)
+     * @Assert\NotBlank(message="Gelieve een beschrijving in te vullen")
+     * @Assert\Length(min=2, minMessage="Beschrijving moet minstens 2 karakters lang zijn.",
+     *                max=30, maxMessage="Beschrijving kan maximaal 30 karakters bevatten.")
      */
     private $description;
 

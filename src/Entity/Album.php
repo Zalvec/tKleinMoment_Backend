@@ -43,39 +43,42 @@ class Album
     /**
      * @ORM\Column(type="string", length=150)
      * @Groups({ "album:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=150)
+     * @Assert\NotBlank(message="Gelieve een naam in te vullen voor dit album.")
+     * @Assert\Length(min=2, minMessage="Naam van een album moet minstens 2 karakters lang zijn.",
+     *                max=150, maxMessage="Naam van een album kan maximaal 150 karakters lang zijn.")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({ "album:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=255)
+     * @Assert\NotBlank(message="Gelieve een beschrijving van de locatie in te vullen")
+     * @Assert\Length(min=2, minMessage="Locatie moet minstens 2 karakters lang zijn.",
+     *                max=255, maxMessage="Locatie kan maximaal 50 karakters lang zijn.")
      */
     private $location;
 
     /**
      * @ORM\Column(type="string", length=150)
      * @Groups({ "album:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=150)
+     * @Assert\NotBlank(message="Gelieve het evenement in te vullen.")
+     * @Assert\Length(min=2, minMessage="Evenement moet minstens 2 karakters lang zijn.",
+     *                max=150, maxMessage="Evenement kan maximaal 150 karakters lang zijn.")
      */
     private $event;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({ "album:read", "album:item:read" })
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Gelieve een datum aan te duiden.")
      */
     private $date;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({ "album:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=10, minMessage="Message needs to be longer than 9 chars")
+     * @Assert\NotBlank(message="Gelieve een beschrijving in te vullen.")
+     * @Assert\Length(min=10, minMessage="Beschrijving moet minstens 10 karakters lang zijn.")
      */
     private $description;
 
@@ -120,7 +123,7 @@ class Album
 
     /**
      * @Vich\UploadableField(mapping="album_covers", fileNameProperty="cover")
-     * @Assert\File( maxSize="16M", maxSizeMessage="Upload a file smaller then 16MB")
+     * @Assert\File( maxSize="16M", maxSizeMessage="Uploadgrootte is maximaal 16MB.")
      * @var File
      */
     private $coverFile;
