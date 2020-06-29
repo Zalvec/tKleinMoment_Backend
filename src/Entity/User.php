@@ -94,7 +94,6 @@ class User implements UserInterface
     /**
      * @SerializedName("password")
      * @Groups({"user:write", "user:item:write"})
-     * @Assert\NotBlank(message="Gelieve een geldig wachtwoord in te geven.")
      * @Assert\Length(min="8", minMessage="Je wachtwoord moet minstens 8 karakters lang zijn.")
      */
     private $plainPassword;

@@ -32,15 +32,16 @@ class Message
     /**
      * @ORM\Column(type="text")
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=20)
+     * @Assert\NotBlank(message="Gelieve een bericht in te vullen")
+     * @Assert\Length(min=10, minMessage="He bericht moet minstens 10 karakters lang zijn.")
      */
     private $text;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({ "message:write" })
-     * @Assert\Length(max=20)
+     * @Assert\Length(min=8, minMessage="Telefoonnummer moet minstens 8 cijfers lang zijn.",
+     *                max=20, maxMessage="Telefoonnummer kan maximaal 20 cijfers lang zijn.")
      */
     private $phoneNumber;
 
@@ -57,24 +58,26 @@ class Message
     /**
      * @ORM\Column(type="string", length=100)
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(message="Gelieve een emailadres in te vullen.")
+     * @Assert\Email(message="Emailadres is ongeldig")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\NotBlank(message="Gelieve je voornaam in te vullen.")
+     * @Assert\Length(min=2, minMessage="Voornaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Voornaam kan maximaal 50 karakters lang zijn.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\NotBlank(message="Gelieve je achternaam in te vullen")
+     * @Assert\Length(min=2, minMessage="Achternaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Achternaam kan maximaal 50 karakters lang zijn.")
      */
     private $lastName;
 

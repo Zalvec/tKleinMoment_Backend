@@ -78,13 +78,13 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         // if the user isn't found in the database, it return and error message
         // they remain on the loginpage
         if (!$user) {
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Email niet gevonden.');
         }
 
         // if the user that wants to login doesn't have 'ROLE_ADMIN' in roles, they will receive an error message
         // they remain on the loginpage
         if(!in_array('ROLE_ADMIN', $user->getRoles())){
-            throw new CustomUserMessageAuthenticationException("You must be an admin to login.");
+            throw new CustomUserMessageAuthenticationException("Je moet admin zijn om in te loggen.");
         }
 
         return $user;
