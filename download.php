@@ -1,7 +1,7 @@
 <?php
 /* Download an image*/
 
-// Check if file is nog empty
+// Check if file is not empty
 if (!empty($_GET['file'])) {
 
     // use pathinfo to be sure the filename itself is not dangerous
