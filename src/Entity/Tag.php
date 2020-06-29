@@ -14,17 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get",
- *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *          "get",
- *          "put" = {"security" = "is_granted('ROLE_ADMIN')"},
- *          "delete" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
  *     normalizationContext={"groups"={"tag:read"}},
- *     denormalizationContext={"groups"={ "admin:tag:write" }},
  * )
  * @ORM\Entity(repositoryClass=TagRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"description":"exact"})
@@ -39,22 +31,26 @@ class Tag
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * @Groups({ "admin:tag:write", "tag:read", "album:item:read" })
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @ORM\Column(type="string", length=30)
+     * @Groups({ "tag:read", "album:item:read" })
+     * @Assert\NotBlank(message="Gelieve een beschrijving in te vullen")
+     * @Assert\Length(min=2, minMessage="Beschrijving moet minstens 2 karakters lang zijn.",
+     *                max=30, maxMessage="Beschrijving kan maximaal 30 karakters bevatten.")
      */
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=AlbumTag::class, mappedBy="tag")
-     * @Groups({ "admin:tag:write", "tag:read" })
+     * @ORM\ManyToMany(targetEntity=Album::class, mappedBy="tags")
      */
-    private $albumTags;
+    private $albums;
+
+    /****************/
+    /*   METHODES   */
+    /****************/
 
     public function __construct()
     {
-        $this->albumTags = new ArrayCollection();
+        $this->albums = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,32 +70,40 @@ class Tag
         return $this;
     }
 
-    /**
-     * @return Collection|AlbumTag[]
-     */
-    public function getAlbumTags(): Collection
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de description van een tag terug*/
+    public function __toString()
     {
-        return $this->albumTags;
+        return (string) $this->description;
     }
 
-    public function addAlbumTag(AlbumTag $albumTag): self
+    /*******************/
+    /*   COLLECTIONS   */
+    /*******************/
+
+    /**
+     * @return Collection|Album[]
+     */
+    public function getAlbums(): Collection
     {
-        if (!$this->albumTags->contains($albumTag)) {
-            $this->albumTags[] = $albumTag;
-            $albumTag->setTag($this);
+        return $this->albums;
+    }
+
+    public function addAlbum(Album $album): self
+    {
+        if (!$this->albums->contains($album)) {
+            $this->albums[] = $album;
+            $album->addTag($this);
         }
 
         return $this;
     }
 
-    public function removeAlbumTag(AlbumTag $albumTag): self
+    public function removeAlbum(Album $album): self
     {
-        if ($this->albumTags->contains($albumTag)) {
-            $this->albumTags->removeElement($albumTag);
-            // set the owning side to null (unless already changed)
-            if ($albumTag->getTag() === $this) {
-                $albumTag->setTag(null);
-            }
+        if ($this->albums->contains($album)) {
+            $this->albums->removeElement($album);
+            $album->removeTag($this);
         }
 
         return $this;

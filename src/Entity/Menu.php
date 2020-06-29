@@ -10,13 +10,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get"
- *     },
- *     itemOperations={
- *          "get"
- *     },
- *     normalizationContext={"groups"={"menu:read"}}
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
+ *     normalizationContext = { "groups" = { "menu:read" } }
  * )
  * @ORM\Entity(repositoryClass=MenuRepository::class)
  */
@@ -30,7 +26,7 @@ class Menu
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=20)
      * @Groups({"menu:read"})
      */
     private $name;
@@ -40,6 +36,10 @@ class Menu
      * @Groups({"menu:read"})
      */
     private $ordering;
+
+    /****************/
+    /*   METHODES   */
+    /****************/
 
     public function getId(): ?int
     {
@@ -69,4 +69,12 @@ class Menu
 
         return $this;
     }
+
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de naam van een menu terug*/
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
+
 }

@@ -8,20 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//"security" = "is_granted('ROLE_ADMIN')",
+
 /**
  * @ApiResource(
  *     collectionOperations={
  *          "get",
- *          "post" = {
- *              "security" = "is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
- *              { "denormalizationContext" = { "groups" = { "message:write" } } }
- *          }
+ *          "post"
  *     },
- *     itemOperations={
- *          "get",
- *          "delete"
- *     }
+ *     itemOperations = { "get" },
+ *     denormalizationContext = { "groups" = { "message:write" }}
  * )
  * @ORM\Entity(repositoryClass=MessageRepository::class)
  */
@@ -37,15 +32,16 @@ class Message
     /**
      * @ORM\Column(type="text")
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Gelieve een bericht in te vullen")
+     * @Assert\Length(min=10, minMessage="He bericht moet minstens 10 karakters lang zijn.")
      */
     private $text;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({ "message:write" })
-     * @Assert\NotBlank()
-     * @Assert\Length(max=20)
+     * @Assert\Length(min=8, minMessage="Telefoonnummer moet minstens 8 cijfers lang zijn.",
+     *                max=20, maxMessage="Telefoonnummer kan maximaal 20 cijfers lang zijn.")
      */
     private $phoneNumber;
 
@@ -55,19 +51,46 @@ class Message
     private $sentAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sendMessages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="boolean")
      */
-    private $sender;
+    private $answered;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receiverMessages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=100)
+     * @Groups({ "message:write" })
+     * @Assert\NotBlank(message="Gelieve een emailadres in te vullen.")
+     * @Assert\Email(message="Emailadres is ongeldig")
      */
-    private $receiver;
+    private $email;
 
+    /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({ "message:write" })
+     * @Assert\NotBlank(message="Gelieve je voornaam in te vullen.")
+     * @Assert\Length(min=2, minMessage="Voornaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Voornaam kan maximaal 50 karakters lang zijn.")
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({ "message:write" })
+     * @Assert\NotBlank(message="Gelieve je achternaam in te vullen")
+     * @Assert\Length(min=2, minMessage="Achternaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Achternaam kan maximaal 50 karakters lang zijn.")
+     */
+    private $lastName;
+
+    /****************/
+    /*   METHODES   */
+    /****************/
+
+    /** Bij het verzenden van een message word het moment opgeslagen
+     *  answered staat standaard op false
+     */
     public function __construct(){
-        $this->sentAt = new \DateTimeImmutable();
+        $this->sentAt = new \DateTimeImmutable('now');
+        $this->answered = false;
     }
 
     public function getId(): ?int
@@ -87,12 +110,12 @@ class Message
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(int $phoneNumber): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -104,27 +127,68 @@ class Message
         return $this->sentAt;
     }
 
-    public function getSender(): ?user
+    public function setSentAt(\DateTimeImmutable $sentAt): void
     {
-        return $this->sender;
+        $this->sentAt = $sentAt;
     }
 
-    public function setSender(?user $sender): self
+    public function getAnswered(): ?bool
     {
-        $this->sender = $sender;
+        return $this->answered;
+    }
+
+    public function setAnswered(bool $answered): self
+    {
+        $this->answered = $answered;
+        return $this;
+    }
+
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de id van een message terug*/
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getReceiver(): ?user
+    public function getFirstName(): ?string
     {
-        return $this->receiver;
+        return $this->firstName;
     }
 
-    public function setReceiver(?user $receiver): self
+    public function setFirstName(string $firstName): self
     {
-        $this->receiver = $receiver;
+        $this->firstName = $firstName;
 
         return $this;
     }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /** Genereerd de volledige naam van een sender */
+    public function getName(){
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
 }

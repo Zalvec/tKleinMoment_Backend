@@ -1,3 +1,22 @@
-login_check:
-  path:     /api/login
+# JWT Refresh Token
+gesdinet_jwt_refresh_token:
+  path:       /api/token/refresh
+  controller: gesdinet.jwtrefreshtoken::refresh
+
+#register:
+#  path: /api/register
+#  controller: App\Controller\AuthController::register
+#  methods: [POST]
+
+# Login route for the frontend
+user_login:
+  path:     /api/login_check
   methods:  [POST]
+
+#app_login:
+#  path: /admin/login
+#  controller: App\Controller\SecurityController::login
+#
+#app_logout:
+#  path: /admin/logout
+#  methods: GET

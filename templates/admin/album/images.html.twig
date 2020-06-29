@@ -1,0 +1,19 @@
+{% if value is not null %}
+    <div class="form-widget">
+        <div class="form-control">
+            {% for image in value %}
+                <div>
+                    <a href="#" class="easyadmin-thumbnail" data-featherlight="#easyadmin-lightbox-{{ item.id }}" data-featherlight-close-on-click="anywhere">
+                        <img src="https://wdev.be/wdev_roel/eindwerk/image.php?{{ image.image }}&height=300&image=/wdev_roel/eindwerk/system/img/albums/{{ image.image }}">
+                        {#                    <img src="{{vich_uploader_asset(item, 'imageFile')}}">#}
+                    </a>
+
+                    <div id="easyadmin-lightbox-{{ item.id }}" class="easyadmin-lightbox">
+                        <img src="https://wdev.be/wdev_roel/eindwerk/system/img/albums/{{ image.image }}">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+

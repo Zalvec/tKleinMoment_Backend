@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Carbon\Carbon;
@@ -14,7 +13,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ApiResource(
@@ -34,9 +32,8 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *     denormalizationContext={"groups"={"user:write"}},
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"})
- * @UniqueEntity(fields={"cosplayName"})
- * @ApiFilter(PropertyFilter::class)
+ * @UniqueEntity(fields={"email"}, message="Er bestaat reeds een gebruiker met dit emailadres.")
+ * @UniqueEntity(fields={"cosplayName"}, message="Er bestaat reeds een gebruiker met deze cosplay naam.")
  */
 class User implements UserInterface
 {
@@ -49,10 +46,10 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @ORM\Column(type="string", length=100, unique=true)
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
+     * @Assert\NotBlank(message="Gelieve een geldig emailadres in te geven.")
+     * @Assert\Email(message="Gelieve een geldig emailadres in te geven.")
      */
     private $email;
 
@@ -70,37 +67,40 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=50)
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
+     * @Assert\NotBlank(message="Gelieve je voornaam in te vullen")
+     * @Assert\Length(min=2, minMessage="Voornaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Voornaam kan maximaal 50 karakters lang zijn.")
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"user:read", "user:write", "user:item:read", "user:item:write", "message:write"})
+     * @Assert\NotBlank(message="Gelieve je achternaam in te vullen")
+     * @Assert\Length(min=2, minMessage="Achternaam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Achternaam kan maximaal 50 karakters lang zijn.")
      */
-    private $lastname;
+    private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=50, nullable=true, unique=true)
      * @Groups({"user:read", "user:write", "user:item:read", "user:item:write"})
-     * @Assert\Length(min=2, max=100)
+     * @Assert\Length(min=2, minMessage="Cosplay naam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="Cosplay naam kan maximaal 50 karakters lang zijn.")
      */
     private $cosplayName;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
      * @SerializedName("password")
      * @Groups({"user:write", "user:item:write"})
+     * @Assert\Length(min="8", minMessage="Je wachtwoord moet minstens 8 karakters lang zijn.")
      */
     private $plainPassword;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
-     * @Groups({"user:write", "user:item:read"})
+     * @Groups({ "user:item:read"})
      */
     private $regkey;
 
@@ -116,46 +116,37 @@ class User implements UserInterface
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
-     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user")
-     * @Groups({"user:read","user:write"})
+     * @ORM\OneToMany(targetEntity=DownloadLog::class, mappedBy="user", cascade={"remove"})
+     * @Groups({ "user:read" })
      */
     private $downloadLogs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user")
-     * @Groups({"user:read","user:write", "user:item:read"})
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="user", cascade={"remove"})
      */
     private $likes;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
-     */
-    private $sendMessages;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
-     */
-    private $receiverMessages;
 
     /**
      * @ORM\OneToMany(targetEntity=Album::class, mappedBy="user")
      */
     private $albums;
 
+    /****************/
+    /*   METHODES   */
+    /****************/
+
+    /** Bij het aanmaken van een user worden volgende zaken automatisch ingesteld
+     *  - createdAt is het moment van aanmaken
+     *  - de roles van een user staan standaard op 'ROLE_USER'
+     */
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->downloadLogs = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->sendMessages = new ArrayCollection();
-        $this->receiverMessages = new ArrayCollection();
         $this->albums = new ArrayCollection();
         $this->roles[] = 'ROLE_USER';
-        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -171,7 +162,8 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable('now');
+
         return $this;
     }
 
@@ -182,7 +174,6 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-//        if ($this->cosplayName) return (string) $this->cosplayName;
         return (string) $this->email;
     }
 
@@ -201,6 +192,7 @@ class User implements UserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+        $this->updatedAt = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -216,7 +208,8 @@ class User implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable('now');
+
         return $this;
     }
 
@@ -249,14 +242,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function getLastName(): ?string
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
-    public function setLastname(string $lastname): self
+    public function setlastName(string $lastName): self
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -269,7 +262,8 @@ class User implements UserInterface
     public function setCosplayName(?string $cosplayName): self
     {
         $this->cosplayName = $cosplayName;
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable('now');
+
         return $this;
     }
 
@@ -293,13 +287,17 @@ class User implements UserInterface
     public function setRegkey(string $regkey): self
     {
         $this->regkey = $regkey;
-        $this->updatedAt = new \DateTimeImmutable();
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -311,13 +309,14 @@ class User implements UserInterface
         return Carbon::instance($this->getCreatedAt())->diffForHumans();
     }
 
-    public function getUpdatedAt(): ?string
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        if ($this->updatedAt){
-            $date = $this->updatedAt;
-            return date("d-m-Y", $date);
-        }
-        return "User is not updated yet.";
+//        if ($this->updatedAt){
+//            $date = $this->updatedAt;
+//            return date("d-m-Y", $date);
+//        }
+//        return "User is not updated yet.";
+        return $this->updatedAt;
     }
 
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
@@ -327,19 +326,20 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de email van een user terug*/
+    public function __toString(){
+        return $this->email;
     }
 
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): string
-    {
-        if ($this->deletedAt){
-            $date = $this->deletedAt;
-            return date("d-m-Y", $date);
-        }
-        return "User is not deleted.";
+    /** Genereerd de volledige naam van een user */
+    public function getName(){
+        return $this->getFirstName() . ' ' . $this->getLastName();
     }
+
+    /*******************/
+    /*   COLLECTIONS   */
+    /*******************/
 
     /**
      * @return Collection|DownloadLog[]
@@ -404,68 +404,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Message[]
-     */
-    public function getSendMessages(): Collection
-    {
-        return $this->sendMessages;
-    }
-
-    public function addSendMessage(Message $sendMessage): self
-    {
-        if (!$this->sendMessages->contains($sendMessage)) {
-            $this->sendMessages[] = $sendMessage;
-            $sendMessage->setSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSendMessage(Message $sendMessage): self
-    {
-        if ($this->sendMessages->contains($sendMessage)) {
-            $this->sendMessages->removeElement($sendMessage);
-            // set the owning side to null (unless already changed)
-            if ($sendMessage->getSender() === $this) {
-                $sendMessage->setSender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Message[]
-     */
-    public function getReceiverMessages(): Collection
-    {
-        return $this->receiverMessages;
-    }
-
-    public function addReceiverMessage(Message $receiverMessage): self
-    {
-        if (!$this->receiverMessages->contains($receiverMessage)) {
-            $this->receiverMessages[] = $receiverMessage;
-            $receiverMessage->setReceiver($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReceiverMessage(Message $receiverMessage): self
-    {
-        if ($this->receiverMessages->contains($receiverMessage)) {
-            $this->receiverMessages->removeElement($receiverMessage);
-            // set the owning side to null (unless already changed)
-            if ($receiverMessage->getReceiver() === $this) {
-                $receiverMessage->setReceiver(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Album[]
      */
     public function getAlbums(): Collection
@@ -478,6 +416,7 @@ class User implements UserInterface
         if (!$this->albums->contains($album)) {
             $this->albums[] = $album;
             $album->setUser($this);
+            $this->updatedAt = new \DateTimeImmutable('now');
         }
 
         return $this;
@@ -490,6 +429,7 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($album->getUser() === $this) {
                 $album->setUser(null);
+                $this->updatedAt = new \DateTimeImmutable('now');
             }
         }
 

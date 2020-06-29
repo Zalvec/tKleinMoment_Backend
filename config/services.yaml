@@ -6,6 +6,13 @@
 parameters:
     cache_adapter: cache.adapter.filesystem
     locale: 'en'
+    app.path.album_images: https://wdev.be/wdev_roel/eindwerk/system/img/albums
+#    app.path.album_images: https://localhost:8000/img/albums
+    app.path.about_images: https://wdev.be/wdev_roel/eindwerk/system/img/about
+#    app.path.about_images: https://localhost:8000/img/about
+    app.path.album_covers: https://wdev.be/wdev_roel/eindwerk/system/img/covers
+#    app.path.about_images: https://localhost:8000/img/covers
+
 
 services:
     # default configuration for services in *this* file
@@ -27,3 +34,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    acme_api.event.jwt_created_listener:
+        class: App\EventListener\JWTCreatedListener
+        arguments: [ '@request_stack' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }

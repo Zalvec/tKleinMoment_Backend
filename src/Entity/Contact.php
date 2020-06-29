@@ -10,16 +10,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     collectionOperations={
- *          "get",
- *          "post" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *          "get",
- *          "put" = {"security" = "is_granted('ROLE_ADMIN')"}
- *     },
+ *     collectionOperations={ "get" },
+ *     itemOperations={ "get" },
  *     normalizationContext={"groups"={"contact:read"}},
- *     denormalizationContext={"groups"={"admin:contact:write"}},
  * )
  * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
@@ -27,6 +20,7 @@ class Contact
 {
     /**
      * @ORM\Id()
+     * @Groups({ "contact:read" })
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
@@ -34,38 +28,45 @@ class Contact
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
+     * @Assert\Url(message="De url '{{value}}' is geen geldige url.")
      */
     private $facebookLink;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({ "contact:read", "admin:contact:write"})
+     * @Groups({ "contact:read" })
+     * @Assert\Url(message="De url '{{value}}' is geen geldige url.")
      */
     private $instagramLink;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({ "contact:read", "admin:contact:write"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
+     * @ORM\Column(type="string", length=50)
+     * @Groups({ "contact:read" })
+     * @Assert\NotBlank(message="Gelieve een (bedrijfs)-naam in te vullen.")
+     * @Assert\Length(min=2, minMessage="De (bedrijfs-)naam moet minstens 2 karakters lang zijn.",
+     *                max=50, maxMessage="De (bedrijfs-)naam kan maximaal 50 karakters lang zijn.")
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     * @Groups({ "contact:read", "admin:contact:write"})
-     * @Assert\Length(max=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
+     * @Groups({ "contact:read" })
+     * @Assert\Length(min="8", max=20)
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({ "contact:read", "admin:contact:write"})
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Groups({ "contact:read" })
+     * @Assert\NotBlank(message="Gelieve een geldig emailadres in te geven")
+     * @Assert\Email(message="Gelieve een geldig emailadres in te geven")
      */
     private $email;
+
+    /****************/
+    /*   METHODES   */
+    /****************/
 
     public function getId(): ?int
     {
@@ -108,12 +109,12 @@ class Contact
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?int $phoneNumber): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -131,4 +132,12 @@ class Contact
 
         return $this;
     }
+
+    /** Voor easyAdmin moet er van elke entiteit een string meegegeven worden.
+    Geeft de naam terug*/
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
+
 }

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}'t Klein Moment - Log in{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    <div class="login-container">
+        <form method="post">
+            <div class="rows">
+                <div class="d-flex align-items-center">
+                    <div class="col">
+                        <h1 class="h1 mb-2 font-weight-normal text-center">'t Klein Moment</h1>
+                        <h2 class="h3 mb-3 font-weight-normal text-center"> Welkom admin</h2>
+
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Wachtwoord" required>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
+
+                        {#
+                            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                            See https://symfony.com/doc/current/security/remember_me.html
+
+                            <div class="checkbox mb-3">
+                                <label>
+                                    <input type="checkbox" name="_remember_me"> Remember me
+                                </label>
+                            </div>
+                        #}
+
+                        <button class="btn btn-block btn-primary" type="submit">
+                            Login
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

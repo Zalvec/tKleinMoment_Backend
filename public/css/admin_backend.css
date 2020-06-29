@@ -1,0 +1,279 @@
+/* css for admin dashboard */
+:root {
+
+    /*--nav-tabs-link-active-bg: #132352;*/
+    /* make the backend contents as wide as the browser window */
+    /*--body-max-width: 100%;*/
+    /* change the background color of the <body> */
+    /*--body-bg: #def57c;*/
+    /*--body-color: hsl(104, 70%, 24%);*/
+    /*--text-color: hsl(343, 100%, 9%);*/
+    /*background-color: #a8edaa;*/
+    /*--color-primary: #66fc47;*/
+    /*--form-bg: #a8edaa;*/
+    /*!* make the base font size smaller *!*/
+    /*--text-color-light: #286712;*/
+    /*!* remove all border radius to make corners straight *!*/
+    --border-radius: 5px;
+    /*--enable-print-styles: false;*/
+    /*--enable-gradients: true;*/
+    /*--headings-color: #014941;*/
+    /*--white: #def57c;*/
+    /*--primary: #e5ba05;*/
+    /*--secondary: #7ff4dd ;*/
+    /*--success: hsl(157, 69%, 38%);*/
+    /*--info: hsl(201, 94%, 37%);*/
+    /*--warning: hsl(30, 81%, 47%);*/
+    /*--danger: hsl(344, 59%, 52%);*/
+    --font-size-base: 20px;
+    --font-size-lg: 30px;
+    --font-size-sm:  18px;
+}
+
+body {
+    font-family: "Lato", 'sans-serif';
+    background-color: rgb(237, 237, 255);
+}
+
+.wrapper { grid-row-gap: 0 !important;}
+
+img {
+    max-height: 85vh;
+    object-fit: contain;
+}
+
+/**********/
+/* HEADER */
+/**********/
+.main-header {
+    background-color: black;
+    padding: 20px;
+    border-radius: 5px 5px 5px 0;
+}
+
+.main-header #header-logo a { color: #ededff; }
+
+#header-logo a { font-size: 2.5rem; }
+
+/********/
+/* USER */
+/********/
+.navbar-custom-menu .user {
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #ededff;
+    padding: 5px;
+}
+
+.popover { border: 1px black solid; }
+
+.popover-body { color: black; }
+
+.text-muted { color: black !important; }
+
+.user-menu-wrapper:hover { color: #07a82d;}
+
+.user-menu a { color: red; }
+
+/********/
+/* MENU */
+/********/
+.main-sidebar {
+    background-color: #373737;
+    padding: 15px 10px;
+    border-radius: 0 0 5px 5px;
+}
+
+.main-sidebar .fa { color: white !important;}
+
+.sidebar-menu li:not(.submenu-active).active .fa,
+.sidebar-menu li:not(.submenu-active).active a { color: #07a82d; }
+
+.treeview,
+.tree { font-size: 1.5rem; }
+
+.treeview a,
+.tree li a { color: white;}
+
+.treeview li a { padding-left: 40px;}
+
+.treeview li a:hover,
+.tree a:hover { color: #07a82d; }
+
+@media (min-width: 992px) {
+    .easyadmin-sidebar-width-compact .main-sidebar {
+        width: 35px !important;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 990px ) {
+    #navigation-toggler i { color: white;}
+}
+
+/***********/
+/* CONTENT */
+/***********/
+.content-wrapper { margin-top: 20px; }
+
+/******************/
+/* CONTENT HEADER */
+/******************/
+.content-header-title .title { font-size: 1.8rem; }
+
+.form-action-search input[type=search].form-control {
+    box-shadow: none;
+    border-bottom: 1px solid black;
+    border-radius: 0;
+    padding: 3px 0 0 30px;
+}
+
+.button-action .action-new { background-color: green;}
+
+.button-action .btn:focus { background-color: green !important;}
+
+.content-header-help { font-style: italic;}
+
+/****************/
+/* CONTENT MAIN */
+/****************/
+
+/* Tabel */
+.datagrid thead { background-color: #acbfb1; }
+
+.datagrid thead i { color: black; }
+
+.datagrid thead .sorted i { color: darkgreen; }
+
+.datagrid td.actions a{ font-size: 1rem; }
+
+.dropdown-item:hover { background-color: #a7d2aa; }
+
+.table td { word-wrap: break-word; }
+
+.datagrid .easyadmin-thumbnail img {
+    box-shadow: 0 0 0 2px var(--white),0 0 4px 1px var(--gray-600);
+    margin-bottom: 2px;
+    margin-top: 2px;
+    max-height: 100px;
+    max-width: 200px;
+}
+
+/* Show */
+body.show .form-horizontal { background-color: #acbfb1; }
+
+body.show .form-control {
+    border: none;
+    background-color: #f8f8f8;
+}
+
+.form-group label,
+.form-group legend.col-form-label {
+    align-self: self-start;
+    color: var(--text-color);
+    flex: 30% 0 0;
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    text-align: left;
+    max-width: 180px;
+}
+
+.form-control ul li a { color: green;}
+.form-control ul li a:hover { color: darkgreen;}
+
+.form-actions .action-edit { background-color: green; }
+.form-actions .action-edit:hover { background-color: darkgreen; }
+
+.form-actions .action-list { color: green; }
+.form-actions .action-list:hover { color: darkgreen; }
+
+/* Edit */
+.content-body .form-horizontal, .content-body form { background-color: #acbfb1; }
+
+.form-widget textarea.form-control,
+.form-widget input.form-control{
+    box-shadow: none;
+    border: none;
+    background-color: #f8f8f8;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered{
+    background-color: #f8f8f8;
+    border:none;
+    border-radius: 5px;
+}
+
+.large textarea.form-control {
+    height: 100px;
+}
+
+.form-actions .action-save { background-color: green; }
+.form-actions .action-save:hover { background-color: darkgreen; }
+.form-actions .btn-primary:focus { background-color: darkgreen !important; }
+
+/* New */
+.content-body form .row { padding: 15px 40px; }
+
+.form-widget-compound .field-album {
+    background: lightgray;
+    border-radius: 5px;
+    padding: 1.5em;
+    margin-bottom: 2em;
+    box-shadow: 5px 5px 15px 5px black;
+}
+
+.form-widget-compound .form-group .form-widget {
+    flex: auto;
+    width: 350px;
+}
+
+.field-collection-item-action {
+    color: white;
+    background: red;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.field-collection-item-action:hover { background-color: darkred; }
+
+#easyadmin-add-collection-item-album_images {
+    color: white;
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+#easyadmin-add-collection-item-album_images:hover { background-color: darkgreen; }
+
+/******************/
+/* CONTENT FOOTER */
+/******************/
+
+.list-pagination {
+    align-items: center;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.pager {
+    margin-left: 20%;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+}
+
+.list-pagination-counter {
+    width: 20%;
+    padding-right: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.list-pagination-counter strong {
+    padding-right: 10px;
+}
+
+.pager .page-item.disabled { cursor: default; }

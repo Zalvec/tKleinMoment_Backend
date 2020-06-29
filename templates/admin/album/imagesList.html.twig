@@ -1,0 +1,23 @@
+{% if value is not null %}
+    <style>
+        .image-list-album {
+            padding: 5px;
+        }
+        .image-list-album-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .form-widget {
+            flex: 0 0 80%;
+        }
+    </style>
+    <div class="form-widget">
+        <div class="form-control image-list-album-container">
+            {% for image in value %}
+                <img class="image-list-album" src="https://wdev.be/wdev_roel/eindwerk/image.php?{{ image.image }}&width=350&image=/wdev_roel/eindwerk/system/img/albums/{{ image.image }}">
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+

@@ -13,17 +13,34 @@ security:
                 property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
+        # Refresh Token
+        refresh:
+            pattern:  ^/api/token/refresh
+            stateless: true
+            anonymous: true
+
+        # Front-end login & security
         login:
-            pattern:  ^/api/login
+            pattern:   ^/api/login_check
             stateless: true
             anonymous: true
             json_login:
-                check_path:         /api/login
+                check_path: /api/login_check
+#                username_path: email
+#                password_path: password
                 success_handler:    lexik_jwt_authentication.handler.authentication_success
                 failure_handler:    lexik_jwt_authentication.handler.authentication_failure
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
+        # API endpoint for user put, delete and specific get
         api:
-            pattern:   ^/api/users/
+            pattern: ^/api/users/
             stateless: true
             guard:
                 authenticators:
@@ -32,6 +49,23 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        # Admin dashboard login & security
+        admin:
+            pattern: ^/
+            anonymous: true
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                csrf_token_generator: security.csrf.token_manager
+            guard:
+                authenticators:
+                    - App\Security\AdminAuthenticator
+                entry_point: App\Security\AdminAuthenticator
+            logout:
+                path: app_logout
+                target: app_login       # on logout you are redirected tot the loginpage
+
         main:
             anonymous: lazy
             provider: app_user_provider
@@ -45,12 +79,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+
+        # access restriction for api endpoints
+        - { path: ^/api/token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/menu, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/about, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/contact, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
+        # access restriction for admin dashboard
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_ADMIN }
